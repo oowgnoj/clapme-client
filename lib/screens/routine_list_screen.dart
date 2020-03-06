@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:calendar_strip/calendar_strip.dart';
+import 'package:clapme_client/models/routine_model.dart';
+import 'package:clapme_client/services/routine_service.dart';
 
 
 class RoutineListScreen extends StatefulWidget {
@@ -16,6 +18,48 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
     DateTime.now().subtract(Duration(days: 2)),
   ];
 
+  List<Routine> routineList = [Routine(
+    id: 1,
+    userId: 2,
+    goalId: 3,
+    title: '샘플 루틴',
+    mon: true,
+    tue: false,
+    wed: false,
+    thu: false,
+    fri: false,
+    sat: false,
+    sun: false,
+    timeAt: 9,
+    createdAt: DateTime.now()
+  )];
+
+  @override
+  initState() {
+    super.initState();
+    print('실행되니?');
+    fetchDayRoutine()
+        .then((result){routineList = result;},
+        onError: (error) {
+          print(error);
+          var temp = Routine(
+            id: 1,
+            userId: 2,
+            goalId: 3,
+            title: '샘플 루틴',
+            mon: true,
+            tue: false,
+            wed: false,
+            thu: false,
+            fri: false,
+            sat: false,
+            sun: false,
+            timeAt: 100,
+            createdAt: DateTime.now()
+          );
+          routineList = [temp];
+    });
+  }
 
   onSelect(data) {
     print("Selected Date -> $data");
@@ -84,14 +128,14 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
             monthNameWidget: _monthNameWidget,
             markedDates: markedDates,
             containerDecoration: BoxDecoration(color: Colors.white),
-          ), Card(
+          ), ...routineList.map((routine) => Card(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            const ListTile(
+            ListTile(
               leading: Icon(Icons.access_time),
-              title: Text('요가하기'),
-              subtitle: Text('08:00'),
+              title: Text(routine.title),
+              subtitle: Text(routine.timeAt.toString()),
             ),
             ButtonBar(
               children: <Widget>[
@@ -103,7 +147,7 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
             ),
           ],
         ),
-      ),
+      )).toList(),
       ])),
     );
   }

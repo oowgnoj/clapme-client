@@ -14,7 +14,7 @@ description: Project Clapme
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
   flutter:
@@ -25,6 +25,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   calendar_strip: ^1.0.4
   http: ^0.12.0+4
+  intl: ^0.16.0
 
 dev_dependencies:
   flutter_test:
