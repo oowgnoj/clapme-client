@@ -46,7 +46,7 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
             id: 1,
             userId: 2,
             goalId: 3,
-            title: '샘플 루틴',
+            title: '샘플 루틴 from fetch error',
             mon: true,
             tue: false,
             wed: false,

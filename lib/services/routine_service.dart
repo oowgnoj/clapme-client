@@ -14,19 +14,21 @@ Future<List> fetchDayRoutine() async {
     return (json.decode(response.body) as List)
         .map((data) => new Routine.fromJson(data)).toList();
   } else {
-    var temp = new Routine();
-    temp.id = 1;
-    temp.userId = 2;
-    temp.goalId = 3;
-    temp.title = '샘플 루틴';
-    temp.mon = true;
-    temp.tue = false;
-    temp.wed = false;
-    temp.thu = false;
-    temp.fri = false;
-    temp.sat = false;
-    temp.sun = false;
-    temp.timeAt = 200;
+    var temp = Routine(
+        id: 1,
+        userId: 2,
+        goalId: 3,
+        title: '샘플 루틴 from response error',
+        mon: true,
+        tue: false,
+        wed: false,
+        thu: false,
+        fri: false,
+        sat: false,
+        sun: false,
+        timeAt: 200,
+        createdAt: DateTime.now()
+    );
     return [temp];
   }
 }
