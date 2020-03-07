@@ -5,11 +5,10 @@ class User {
   String profile;
   String profilePic;
 
-  User({
-    this.username,
-    this.email,
-    this.password,
-    this.profile,
-    this.profilePic
-  });
+  User(
+      {this.username,
+      this.email,
+      this.password,
+      this.profile,
+      this.profilePic});
 }
