@@ -33,7 +33,8 @@ class _OnboardingState extends State<Onboarding> {
       'title': '목표 달성에 \n힘이 되어 드릴게요',
       'content': RecommendList(list: recommendList, mainColor: mainGrey)
     },
-    {'title': '시간은 언제가 좋을까요', 'content': TimePicker()}
+    {'title': '시간은 언제가 좋을까요', 'content': TimePicker()},
+    {'title': '반복하고 싶은 요일', 'content': TimePicker()},
   ];
   Widget build(BuildContext context) {
     return new MaterialApp(
