@@ -10,12 +10,15 @@ class TimePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(setAlarmTime);
-    return CupertinoTimerPicker(
-        mode: CupertinoTimerPickerMode.hm,
-        onTimerDurationChanged: (Duration changedTime) {
-          print(changedTime);
-        });
+    return Container(
+      height: MediaQuery.of(context).size.height / 4,
+      child: CupertinoDatePicker(
+          mode: CupertinoDatePickerMode.time,
+          use24hFormat: false,
+          onDateTimeChanged: (DateTime changedTime) {
+            print(changedTime);
+          }),
+    );
   }
 }
 
