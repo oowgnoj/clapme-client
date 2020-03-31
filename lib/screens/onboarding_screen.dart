@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:clapme_client/components/greyList_component.dart';
+import 'package:clapme_client/components/recommendList.dart';
 import 'package:clapme_client/components/daypicker_component.dart';
 
 const mainGrey = Color(0xffF2F2F2);
@@ -13,6 +13,8 @@ final List<String> recommendList = <String>[
   '요가',
   '영양제'
 ];
+
+final List<String> dayList = <String>['월', '화', '수', '목', '금', '토', '일'];
 
 class Onboarding extends StatefulWidget {
   int stepIndex;
@@ -34,7 +36,13 @@ class _OnboardingState extends State<Onboarding> {
       'content': RecommendList(list: recommendList, mainColor: mainGrey)
     },
     {'title': '시간은 언제가 좋을까요', 'content': TimePicker()},
-    {'title': '반복하고 싶은 요일', 'content': TimePicker()},
+    {
+      'title': '반복하고 싶은 요일',
+      'content': RecommendList(
+        list: dayList,
+        mainColor: mainGrey,
+      )
+    },
   ];
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -61,26 +69,33 @@ class _OnboardingState extends State<Onboarding> {
               ),
             ),
             Container(height: 500, child: contents[stepIndex]['content']),
-            SizedBox(
-              child: RaisedButton(
-                onPressed: () {
-                  setState(() {
-                    stepIndex = stepIndex - 1;
-                  });
-                },
-                child: Text('-'),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.40,
+                  child: RaisedButton(
+                    onPressed: () {
+                      setState(() {
+                        stepIndex = stepIndex - 1;
+                      });
+                    },
+                    child: Text('뒤로가기'),
+                  ),
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.40,
+                  child: RaisedButton(
+                    onPressed: () {
+                      setState(() {
+                        stepIndex = stepIndex + 1;
+                      });
+                    },
+                    child: Text('다음으로'),
+                  ),
+                )
+              ],
             ),
-            SizedBox(
-              child: RaisedButton(
-                onPressed: () {
-                  setState(() {
-                    stepIndex = stepIndex + 1;
-                  });
-                },
-                child: Text('+'),
-              ),
-            )
           ],
         ),
       ),
