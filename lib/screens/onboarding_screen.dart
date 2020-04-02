@@ -27,23 +27,38 @@ class Onboarding extends StatefulWidget {
 class _OnboardingState extends State<Onboarding> {
   int stepIndex = 0;
   Duration alarmTime;
+  String goalName;
 
-  int setAlarmTime = 3;
+  setGoalName(target) {
+    setState(() {
+      goalName = target;
+    });
+  }
+
+  setAlarmTime(target) {
+    setState(() {
+      alarmTime = target;
+    });
+  }
+
   @override
-  List<Map<String, dynamic>> contents = [
-    {
-      'title': '목표 달성에 \n힘이 되어 드릴게요',
-      'content': RecommendList(list: recommendList, mainColor: mainGrey)
-    },
-    {'title': '시간은 언제가 좋을까요', 'content': TimePicker()},
-    {
-      'title': '반복하고 싶은 요일',
-      'content': RecommendList(
-        list: dayList,
-        mainColor: mainGrey,
-      )
-    },
-  ];
+  void initState() {
+    super.initState();
+    List<Map<String, dynamic>> contents = [
+      {
+        'title': '목표 달성에 \n힘이 되어 드릴게요',
+        'content': new RecommendList(
+            list: recommendList, mainColor: mainGrey, setGoalName: setGoalName)
+      },
+      {'title': '시간은 언제가 좋을까요', 'content': TimePicker()},
+      {
+        'title': '반복하고 싶은 요일',
+        'content': RecommendList(
+            list: dayList, mainColor: mainGrey, setAlarmTime: setAlarmTime)
+      },
+    ];
+  }
+
   Widget build(BuildContext context) {
     return new MaterialApp(
       title: 'Onboarding',
