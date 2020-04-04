@@ -1,24 +1,29 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'package:clapme_client/models/routine_model.dart';
 
-var server = 'http://clapme.server.com';
-var date = DateTime.now();
-var dayOfWeek = DateFormat('EEEE').format(date); // Tuesday
+var server = 'http://15.164.96.238:5000';
+var accessToken =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJ0ZXN0MDQwNCIsImVtYWlsIjoidGVzdDA0MDRAZ21haWwuY29tIiwicHJvZmlsZSI6bnVsbCwicHJvZmlsZV9waWMiOm51bGx9.bglBCdDIwQ5nsSu6c2W7aO6hRHaBvoEISONpYn5oaDE";
 
-Future<List> fetchDayRoutine() async {
-  final response = await http.get('$server/routine/$dayOfWeek');
+Future<List<Routine>> fetchDayRoutine(dayOfWeek) async {
+  print('$server/routine/?day_of_week=$dayOfWeek');
+
+  final response = await http.get('$server/routine/?day_of_week=$dayOfWeek',
+      headers: {"Authorization": accessToken});
+
+  print(response.statusCode);
 
   if (response.statusCode == 200) {
     return (json.decode(response.body) as List)
-        .map((data) => new Routine.fromJson(data)).toList();
+        .expand((data) =>
+            [if (data['$dayOfWeek']) new Routine.fromJson(data)].toList())
+        .toList();
   } else {
+    print(response.headers);
     var temp = Routine(
         id: 1,
-        userId: 2,
         goalId: 3,
-        title: '샘플 루틴 from response error',
         mon: true,
         tue: false,
         wed: false,
@@ -27,8 +32,7 @@ Future<List> fetchDayRoutine() async {
         sat: false,
         sun: false,
         timeAt: 200,
-        createdAt: DateTime.now()
-    );
+        createdAt: '0000-00-00 00:00');
     return [temp];
   }
 }

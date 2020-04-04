@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:calendar_strip/calendar_strip.dart';
 import 'package:clapme_client/models/routine_model.dart';
 import 'package:clapme_client/services/routine_service.dart';
-
+import 'package:intl/intl.dart';
 
 class RoutineListScreen extends StatefulWidget {
   @override
@@ -13,56 +13,31 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
   DateTime startDate = DateTime.now().subtract(Duration(days: 6));
   DateTime endDate = DateTime.now().add(Duration(days: 0));
   DateTime selectedDate = DateTime.now();
+  String selectedDayOfWeek =
+      DateFormat('E').format(DateTime.now()).toLowerCase();
+
   List<DateTime> markedDates = [
     DateTime.now().subtract(Duration(days: 1)),
     DateTime.now().subtract(Duration(days: 2)),
   ];
 
-  List<Routine> routineList = [Routine(
-    id: 1,
-    userId: 2,
-    goalId: 3,
-    title: '샘플 루틴',
-    mon: true,
-    tue: false,
-    wed: false,
-    thu: false,
-    fri: false,
-    sat: false,
-    sun: false,
-    timeAt: 9,
-    createdAt: DateTime.now()
-  )];
+  Future<List<Routine>> routineList;
 
   @override
   initState() {
     super.initState();
-    print('실행되니?');
-    fetchDayRoutine()
-        .then((result){routineList = result;},
-        onError: (error) {
-          print(error);
-          var temp = Routine(
-            id: 1,
-            userId: 2,
-            goalId: 3,
-            title: '샘플 루틴 from fetch error',
-            mon: true,
-            tue: false,
-            wed: false,
-            thu: false,
-            fri: false,
-            sat: false,
-            sun: false,
-            timeAt: 100,
-            createdAt: DateTime.now()
-          );
-          routineList = [temp];
-    });
+    routineList =
+        fetchDayRoutine(DateFormat('E').format(DateTime.now()).toLowerCase());
   }
 
-  onSelect(data) {
-    print("Selected Date -> $data");
+  onSelect(data) async {
+    setState(() => {
+          selectedDate = data,
+          selectedDayOfWeek = DateFormat('E').format(data).toLowerCase(),
+          routineList = fetchDayRoutine(selectedDayOfWeek)
+        });
+
+    print("Selected Date -> $data $selectedDayOfWeek");
   }
 
   _monthNameWidget(monthName) {
@@ -80,20 +55,25 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
         margin: EdgeInsets.only(left: 1, right: 1),
         width: 6,
         height: 6,
-        decoration: BoxDecoration(shape: BoxShape.circle, color: Color(0xFF3EBACE)),
+        decoration:
+            BoxDecoration(shape: BoxShape.circle, color: Color(0xFF3EBACE)),
       ),
     ]);
   }
 
-  dateTileBuilder(date, selectedDate, rowIndex, dayName, isDateMarked, isDateOutOfRange) {
+  dateTileBuilder(
+      date, selectedDate, rowIndex, dayName, isDateMarked, isDateOutOfRange) {
     bool isSelectedDate = date.compareTo(selectedDate) == 0;
     Color fontColor = isDateOutOfRange ? Colors.black26 : Colors.black87;
-    TextStyle normalStyle = TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: fontColor);
-    TextStyle selectedStyle = TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: Colors.black87);
+    TextStyle normalStyle =
+        TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: fontColor);
+    TextStyle selectedStyle = TextStyle(
+        fontSize: 17, fontWeight: FontWeight.w600, color: Colors.black87);
     TextStyle dayNameStyle = TextStyle(fontSize: 13, color: fontColor);
     List<Widget> _children = [
       Text(dayName, style: dayNameStyle),
-      Text(date.day.toString(), style: !isSelectedDate ? normalStyle : selectedStyle),
+      Text(date.day.toString(),
+          style: !isSelectedDate ? normalStyle : selectedStyle),
     ];
 
     if (isDateMarked == true) {
@@ -114,43 +94,62 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
     );
   }
 
+  _buildRoutineCard(Routine routine) {
+    return Card(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          ListTile(
+            leading: Icon(Icons.access_time),
+            title: Text('아침 스트레칭'), // 타이틀 오면 바꿀것
+            subtitle: Text(routine.timeAt.toString()),
+          ),
+          ButtonBar(
+            children: <Widget>[
+              FlatButton(
+                child: const Text('complete !'),
+                onPressed: () {/* ... */},
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-          child: ListView (
-              children: <Widget>[CalendarStrip(
-            startDate: startDate,
-            endDate: endDate,
-            onDateSelected: onSelect,
-            dateTileBuilder: dateTileBuilder,
-            iconColor: Colors.black87,
-            monthNameWidget: _monthNameWidget,
-            markedDates: markedDates,
-            containerDecoration: BoxDecoration(color: Colors.white),
-          ), ...routineList.map((routine) => Card(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            ListTile(
-              leading: Icon(Icons.access_time),
-              title: Text(routine.title),
-              subtitle: Text(routine.timeAt.toString()),
-            ),
-            ButtonBar(
-              children: <Widget>[
-                FlatButton(
-                  child: const Text('complete !'),
-                  onPressed: () {/* ... */},
-                ),
-              ],
-            ),
-          ],
+          child: ListView(children: <Widget>[
+        CalendarStrip(
+          startDate: startDate,
+          endDate: endDate,
+          onDateSelected: onSelect,
+          dateTileBuilder: dateTileBuilder,
+          iconColor: Colors.black87,
+          monthNameWidget: _monthNameWidget,
+          markedDates: markedDates,
+          containerDecoration: BoxDecoration(color: Colors.white),
         ),
-      )).toList(),
+        FutureBuilder(
+            future: routineList,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    Routine routine = snapshot.data[index];
+                    return _buildRoutineCard(routine);
+                  },
+                );
+              } else if (snapshot.hasError) {
+                return Text("${snapshot.error}");
+              }
+              return CircularProgressIndicator();
+            })
       ])),
     );
   }
 }
-
-
