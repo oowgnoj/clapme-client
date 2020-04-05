@@ -4,6 +4,11 @@ import 'package:clapme_client/components/recommendList.dart';
 import 'package:clapme_client/components/daypicker_component.dart';
 
 const mainGrey = Color(0xffF2F2F2);
+final List<String> stepTitle = <String>[
+  '목표 달성에 \n힘이 되어 드릴게요',
+  '시간은 언제가\n 좋을까요',
+  '반복하고싶은 요일'
+];
 
 final List<String> recommendList = <String>[
   '독서',
@@ -25,9 +30,10 @@ class Onboarding extends StatefulWidget {
 }
 
 class _OnboardingState extends State<Onboarding> {
-  int stepIndex = 0;
+  int currentPage = 0;
   Duration alarmTime;
   String goalName;
+  Widget content;
 
   setGoalName(target) {
     setState(() {
@@ -44,19 +50,6 @@ class _OnboardingState extends State<Onboarding> {
   @override
   void initState() {
     super.initState();
-    List<Map<String, dynamic>> contents = [
-      {
-        'title': '목표 달성에 \n힘이 되어 드릴게요',
-        'content': new RecommendList(
-            list: recommendList, mainColor: mainGrey, setGoalName: setGoalName)
-      },
-      {'title': '시간은 언제가 좋을까요', 'content': TimePicker()},
-      {
-        'title': '반복하고 싶은 요일',
-        'content': RecommendList(
-            list: dayList, mainColor: mainGrey, setAlarmTime: setAlarmTime)
-      },
-    ];
   }
 
   Widget build(BuildContext context) {
@@ -76,14 +69,14 @@ class _OnboardingState extends State<Onboarding> {
               padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
               margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
               child: Text(
-                contents[stepIndex]['title'],
+                stepTitle[currentPage],
                 style: TextStyle(
                     color: Colors.grey[600],
                     fontSize: 25,
                     fontWeight: FontWeight.bold),
               ),
             ),
-            Container(height: 500, child: contents[stepIndex]['content']),
+            Container(height: 500, child: content),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
@@ -92,7 +85,7 @@ class _OnboardingState extends State<Onboarding> {
                   child: RaisedButton(
                     onPressed: () {
                       setState(() {
-                        stepIndex = stepIndex - 1;
+                        currentPage = currentPage - 1;
                       });
                     },
                     child: Text('뒤로가기'),
@@ -103,7 +96,7 @@ class _OnboardingState extends State<Onboarding> {
                   child: RaisedButton(
                     onPressed: () {
                       setState(() {
-                        stepIndex = stepIndex + 1;
+                        currentPage = currentPage + 1;
                       });
                     },
                     child: Text('다음으로'),
