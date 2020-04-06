@@ -1,22 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:clapme_client/components/recommendList.dart';
 import 'package:clapme_client/components/daypicker_component.dart';
+import 'package:clapme_client/models/model.dart';
+import 'package:clapme_client/utils/api.dart';
+import 'package:clapme_client/models/model.dart';
 
 const mainGrey = Color(0xffF2F2F2);
 final List<String> stepTitle = <String>[
   '목표 달성에 \n힘이 되어 드릴게요',
   '시간은 언제가\n 좋을까요',
   '반복하고싶은 요일'
-];
-
-final List<String> recommendList = <String>[
-  '독서',
-  '운동',
-  '명상',
-  '산책',
-  '요가',
-  '영양제'
 ];
 
 final List<String> dayList = <String>['월', '화', '수', '목', '금', '토', '일'];
@@ -31,13 +24,12 @@ class Onboarding extends StatefulWidget {
 
 class _OnboardingState extends State<Onboarding> {
   int currentPage = 0;
+  String routineTitle;
   Duration alarmTime;
-  String goalName;
-  Widget content;
 
   setGoalName(target) {
     setState(() {
-      goalName = target;
+      routineTitle = target;
     });
   }
 
@@ -76,7 +68,7 @@ class _OnboardingState extends State<Onboarding> {
                     fontWeight: FontWeight.bold),
               ),
             ),
-            Container(height: 500, child: content),
+            Container(height: 500, child: routineList),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
@@ -94,7 +86,7 @@ class _OnboardingState extends State<Onboarding> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.40,
                   child: RaisedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       setState(() {
                         currentPage = currentPage + 1;
                       });
@@ -110,3 +102,26 @@ class _OnboardingState extends State<Onboarding> {
     );
   }
 }
+
+Widget routineList = FutureBuilder(
+    future: getRecommendList(),
+    builder: (context, AsyncSnapshot snapshot) {
+      if (!snapshot.hasData) {
+        return Center(child: CircularProgressIndicator());
+      } else {
+        return ListView.builder(
+            padding: const EdgeInsets.all(8),
+            itemCount: snapshot.data.length,
+            itemBuilder: (BuildContext context, int index) {
+              List<Routine> list = snapshot.data;
+              return Container(
+                  margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                  padding: EdgeInsets.all(20),
+                  color: Colors.grey[400],
+                  child: Text(
+                    '${list[index].title}',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  ));
+            });
+      }
+    });
