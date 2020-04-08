@@ -14,9 +14,6 @@ final List<String> stepTitle = <String>[
 final List<String> dayList = <String>['월', '화', '수', '목', '금', '토', '일'];
 
 class Onboarding extends StatefulWidget {
-  int stepIndex;
-  Duration alarmTime;
-
   @override
   _OnboardingState createState() => _OnboardingState();
 }
@@ -44,7 +41,6 @@ class _OnboardingState extends State<Onboarding> {
   }
 
   Widget build(BuildContext context) {
-    print(routineTitle);
     return new MaterialApp(
       title: 'Onboarding',
       theme: ThemeData(
@@ -68,7 +64,13 @@ class _OnboardingState extends State<Onboarding> {
                     fontWeight: FontWeight.bold),
               ),
             ),
-            Container(height: 650, child: RoutineList(setGoalName)),
+            Container(
+                height: 650,
+                child: currentPage == 0
+                    ? RoutineList(setGoalName)
+                    : currentPage == 1
+                        ? TimePicker(setAlarmTime: setAlarmTime)
+                        : _DaysList()),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
@@ -203,4 +205,44 @@ _displayDialog(BuildContext context, Function handleState) async {
           ],
         );
       });
+}
+
+class _DaysList extends StatelessWidget {
+  List<String> _dayslist = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+  List<String> _shortcutList = ['weekdays', 'weekends'];
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Container(
+            child: Row(
+                children: _dayslist
+                    .map<Widget>((day) => Expanded(
+                          child: RawMaterialButton(
+                            onPressed: () {},
+                            child: new Text(day),
+                            shape: new CircleBorder(),
+                            elevation: 2.0,
+                            fillColor: Colors.white,
+                            padding: const EdgeInsets.all(15),
+                          ),
+                        ))
+                    .toList())),
+        Container(
+            child: Row(
+                children: _shortcutList
+                    .map<Widget>((shortcut) => Expanded(
+                          child: RawMaterialButton(
+                            onPressed: () {},
+                            child: new Text(shortcut),
+                            shape: new CircleBorder(),
+                            elevation: 2.0,
+                            fillColor: Colors.white,
+                            padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                          ),
+                        ))
+                    .toList())),
+      ],
+    );
+  }
 }
