@@ -11,7 +11,15 @@ final List<String> stepTitle = <String>[
   '시간은 언제가\n 좋을까요',
   '반복하고싶은 요일'
 ];
-final List<String> dayList = <String>['월', '화', '수', '목', '금', '토', '일'];
+final List<String> dayList = <String>[
+  'mon',
+  'tue',
+  'wed',
+  'thu',
+  'fri',
+  'sat',
+  'sun'
+];
 
 class Onboarding extends StatefulWidget {
   @override
@@ -22,6 +30,14 @@ class _OnboardingState extends State<Onboarding> {
   int currentPage = 0;
   String routineTitle;
   Duration alarmTime;
+  Map<String, dynamic> alarmDays = {
+    'mon': false,
+    'tue': false,
+    'wed': false,
+    'thu': false,
+    'sat': false,
+    'sun': false
+  };
 
   setGoalName(target) {
     setState(() {
@@ -35,12 +51,44 @@ class _OnboardingState extends State<Onboarding> {
     });
   }
 
+  setAlarmDays(target) {
+    switch (target) {
+      case 'weekdays':
+        setState(() {
+          alarmDays['mon'] = true;
+          alarmDays['tue'] = true;
+          alarmDays['wed'] = true;
+          alarmDays['thu'] = true;
+          alarmDays['fri'] = true;
+          alarmDays['sat'] = false;
+          alarmDays['sun'] = false;
+        });
+        break;
+      case 'weekends':
+        setState(() {
+          alarmDays['mon'] = false;
+          alarmDays['tue'] = false;
+          alarmDays['wed'] = false;
+          alarmDays['thu'] = false;
+          alarmDays['fri'] = false;
+          alarmDays['sat'] = true;
+          alarmDays['sun'] = true;
+        });
+        break;
+      default:
+        setState(() {
+          alarmDays[target] = !alarmDays[target];
+        });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
   }
 
   Widget build(BuildContext context) {
+    print(alarmDays);
     return new MaterialApp(
       title: 'Onboarding',
       theme: ThemeData(
@@ -70,7 +118,7 @@ class _OnboardingState extends State<Onboarding> {
                     ? RoutineList(setGoalName)
                     : currentPage == 1
                         ? TimePicker(setAlarmTime: setAlarmTime)
-                        : _DaysList()),
+                        : _DaysList(setAlarmDays, alarmDays)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
@@ -207,10 +255,31 @@ _displayDialog(BuildContext context, Function handleState) async {
       });
 }
 
-class _DaysList extends StatelessWidget {
+class _DaysList extends StatefulWidget {
+  _DaysList(this.setAlarmDays, this.alarmDays);
+  final Function setAlarmDays;
+  final Map alarmDays;
+
+  @override
+  __DaysListState createState() => __DaysListState();
+}
+
+class __DaysListState extends State<_DaysList> {
   List<String> _dayslist = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
   List<String> _shortcutList = ['weekdays', 'weekends'];
+  Map<String, dynamic> test = {
+    'mon': false,
+    'tue': false,
+    'wed': false,
+    'thu': false,
+    'sat': false,
+    'sun': false
+  };
+
+  Map<String, dynamic> colorMap = {'on': Colors.grey, 'off': Colors.white};
+
   Widget build(BuildContext context) {
+    print(widget.alarmDays);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -219,11 +288,15 @@ class _DaysList extends StatelessWidget {
                 children: _dayslist
                     .map<Widget>((day) => Expanded(
                           child: RawMaterialButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              widget.setAlarmDays(day);
+                            },
                             child: new Text(day),
                             shape: new CircleBorder(),
                             elevation: 2.0,
-                            fillColor: Colors.white,
+                            fillColor: widget.alarmDays[day]
+                                ? Colors.grey
+                                : Colors.white,
                             padding: const EdgeInsets.all(15),
                           ),
                         ))
@@ -233,7 +306,9 @@ class _DaysList extends StatelessWidget {
                 children: _shortcutList
                     .map<Widget>((shortcut) => Expanded(
                           child: RawMaterialButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              widget.setAlarmDays(shortcut);
+                            },
                             child: new Text(shortcut),
                             shape: new CircleBorder(),
                             elevation: 2.0,
