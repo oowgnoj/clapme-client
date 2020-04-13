@@ -258,7 +258,7 @@ _displayDialog(BuildContext context, Function handleState) async {
 class _DaysList extends StatefulWidget {
   _DaysList(this.setAlarmDays, this.alarmDays);
   final Function setAlarmDays;
-  final Map alarmDays;
+  final Map<String, dynamic> alarmDays;
 
   @override
   __DaysListState createState() => __DaysListState();
@@ -267,19 +267,11 @@ class _DaysList extends StatefulWidget {
 class __DaysListState extends State<_DaysList> {
   List<String> _dayslist = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
   List<String> _shortcutList = ['weekdays', 'weekends'];
-  Map<String, dynamic> test = {
-    'mon': false,
-    'tue': false,
-    'wed': false,
-    'thu': false,
-    'sat': false,
-    'sun': false
-  };
 
   Map<String, dynamic> colorMap = {'on': Colors.grey, 'off': Colors.white};
 
   Widget build(BuildContext context) {
-    print(widget.alarmDays);
+    print(widget.alarmDays['mon']);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
