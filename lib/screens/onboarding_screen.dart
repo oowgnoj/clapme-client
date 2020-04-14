@@ -29,7 +29,7 @@ class Onboarding extends StatefulWidget {
 class _OnboardingState extends State<Onboarding> {
   int currentPage = 0;
   String routineTitle;
-  Duration alarmTime;
+  DateTime alarmTime;
   Map<String, dynamic> alarmDays = {
     'mon': false,
     'tue': false,
@@ -88,7 +88,11 @@ class _OnboardingState extends State<Onboarding> {
   }
 
   Widget build(BuildContext context) {
+    print(routineTitle);
     print(alarmDays);
+    print('time');
+    print(alarmTime);
+
     return new MaterialApp(
       title: 'Onboarding',
       theme: ThemeData(
@@ -271,7 +275,6 @@ class __DaysListState extends State<_DaysList> {
   Map<String, dynamic> colorMap = {'on': Colors.grey, 'off': Colors.white};
 
   Widget build(BuildContext context) {
-    print(widget.alarmDays['mon']);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -286,7 +289,7 @@ class __DaysListState extends State<_DaysList> {
                             child: new Text(day),
                             shape: new CircleBorder(),
                             elevation: 2.0,
-                            fillColor: widget.alarmDays[day]
+                            fillColor: widget.alarmDays[day] == true
                                 ? Colors.grey
                                 : Colors.white,
                             padding: const EdgeInsets.all(15),

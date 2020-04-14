@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 class TimePicker extends StatelessWidget {
   // super constructor
   TimePicker({Key key, this.setAlarmTime}) : super(key: key);
-  final Function(Duration) setAlarmTime;
+  final Function(DateTime) setAlarmTime;
 
   // constructor :
 
@@ -16,7 +16,7 @@ class TimePicker extends StatelessWidget {
           mode: CupertinoDatePickerMode.time,
           use24hFormat: false,
           onDateTimeChanged: (DateTime changedTime) {
-            print(changedTime);
+            setAlarmTime(changedTime);
           }),
     );
   }
