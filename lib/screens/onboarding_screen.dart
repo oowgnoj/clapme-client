@@ -29,7 +29,7 @@ class Onboarding extends StatefulWidget {
 class _OnboardingState extends State<Onboarding> {
   int currentPage = 0;
   String routineTitle;
-  Duration alarmTime;
+  DateTime alarmTime;
   Map<String, dynamic> alarmDays = {
     'mon': false,
     'tue': false,
@@ -88,7 +88,11 @@ class _OnboardingState extends State<Onboarding> {
   }
 
   Widget build(BuildContext context) {
+    print(routineTitle);
     print(alarmDays);
+    print('time');
+    print(alarmTime);
+
     return new MaterialApp(
       title: 'Onboarding',
       theme: ThemeData(
@@ -258,7 +262,7 @@ _displayDialog(BuildContext context, Function handleState) async {
 class _DaysList extends StatefulWidget {
   _DaysList(this.setAlarmDays, this.alarmDays);
   final Function setAlarmDays;
-  final Map alarmDays;
+  final Map<String, dynamic> alarmDays;
 
   @override
   __DaysListState createState() => __DaysListState();
@@ -267,19 +271,10 @@ class _DaysList extends StatefulWidget {
 class __DaysListState extends State<_DaysList> {
   List<String> _dayslist = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
   List<String> _shortcutList = ['weekdays', 'weekends'];
-  Map<String, dynamic> test = {
-    'mon': false,
-    'tue': false,
-    'wed': false,
-    'thu': false,
-    'sat': false,
-    'sun': false
-  };
 
   Map<String, dynamic> colorMap = {'on': Colors.grey, 'off': Colors.white};
 
   Widget build(BuildContext context) {
-    print(widget.alarmDays);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -294,7 +289,7 @@ class __DaysListState extends State<_DaysList> {
                             child: new Text(day),
                             shape: new CircleBorder(),
                             elevation: 2.0,
-                            fillColor: widget.alarmDays[day]
+                            fillColor: widget.alarmDays[day] == true
                                 ? Colors.grey
                                 : Colors.white,
                             padding: const EdgeInsets.all(15),
