@@ -1,20 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:clapme_client/screens/routine_list_screen.dart';
+import 'package:clapme_client/screens/home_screen.dart';
 
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Clap me',
-      theme: ThemeData(
-        primaryColor: Color(0xFF3EBACE),
-        accentColor: Color(0xFFD8ECF1),
-        scaffoldBackgroundColor: Color(0xFFF3F5F7),
-      ),
-      home: RoutineListScreen(),
-    );
-  }
+void main() {
+  runApp(MaterialApp(
+    title: 'Navigation Basics',
+    home: HomeScreen(),
+  ));
 }
+
+final routes = {'/': (BuildContext context) => HomeScreen};
