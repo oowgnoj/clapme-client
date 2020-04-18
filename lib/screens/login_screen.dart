@@ -124,7 +124,7 @@ class _LoginState extends State<Login> {
     if (form.validate()) {
       form.save();
       var isLoginSuccess = await fetchLogin(_email, _password);
-      if (isLoginSuccess) Navigator.of(context).pushNamed('/signup');
+      if (isLoginSuccess) Navigator.of(context).pushNamed('/');
     }
   }
 
