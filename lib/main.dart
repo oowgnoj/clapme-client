@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:clapme_client/screens/home_screen.dart';
-
 import 'package:clapme_client/screens/login_screen.dart';
 import 'package:clapme_client/screens/signup_screen.dart';
 

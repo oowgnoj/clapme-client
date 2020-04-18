@@ -22,7 +22,7 @@ class Token {
 
   Token({this.accessToken});
 
-  factory Token.fromJson(Map<String, String> json) {
+  factory Token.fromJson(Map<String, dynamic> json) {
     return Token(accessToken: json['access-token']);
   }
 }
