@@ -143,7 +143,7 @@ class _SignupState extends State<Signup> {
         Alert(
           context: context,
           type: AlertType.none,
-          style: alertStyle,
+          style: alertSuccessStyle,
           title: "회원가입 완료 👏",
           buttons: [
             DialogButton(
@@ -160,7 +160,13 @@ class _SignupState extends State<Signup> {
           ],
         ).show();
       } else {
-        Alert(context: context, title: "회원가입 실패", desc: "다시 시도해주세요").show();
+        Alert(
+                context: context,
+                type: AlertType.none,
+                style: alertFailedStyle,
+                title: "회원가입 실패 🤔",
+                desc: "다시 시도해주세요")
+            .show();
       }
     }
   }
