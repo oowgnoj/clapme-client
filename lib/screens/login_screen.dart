@@ -123,8 +123,10 @@ class _LoginState extends State<Login> {
     final form = formKey.currentState;
     if (form.validate()) {
       form.save();
-      var isLoginSuccess = await fetchLogin(_email, _password);
-      if (isLoginSuccess) Navigator.of(context).pushNamed('/');
+      bool isLoginSuccess = await fetchLogin(_email, _password);
+      if (isLoginSuccess) {
+        Navigator.of(context).pushNamed('/onboarding');
+      }
     }
   }
 

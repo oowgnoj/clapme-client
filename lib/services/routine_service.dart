@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:clapme_client/models/routine_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 var server = 'http://15.164.96.238:5000';
 var accessToken =
@@ -9,10 +10,11 @@ var accessToken =
 Future<List<Routine>> fetchDayRoutine(dayOfWeek) async {
   print('$server/routine/?day_of_week=$dayOfWeek');
 
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String accessToken = prefs.getString('accessToken');
+
   final response = await http.get('$server/routine/?day_of_week=$dayOfWeek',
       headers: {"Authorization": accessToken});
-
-  print(response.statusCode);
 
   if (response.statusCode == 200) {
     return (json.decode(response.body) as List)

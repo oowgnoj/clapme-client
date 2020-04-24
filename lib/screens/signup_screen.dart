@@ -1,5 +1,7 @@
 import 'package:clapme_client/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:clapme_client/utils/alert_style.dart';
 
 class Signup extends StatefulWidget {
   @override
@@ -92,8 +94,8 @@ class _SignupState extends State<Signup> {
           borderRadius: BorderRadius.circular(20.0),
           color: Color(0xff7ACBAA),
           elevation: 1.0,
-          child: GestureDetector(
-            onTap: () {},
+          child: MaterialButton(
+            onPressed: validateAndSave,
             child: Center(
               child: Text(
                 'SIGNUP',
@@ -108,7 +110,8 @@ class _SignupState extends State<Signup> {
   }
 
   Widget _goBackButton() {
-    Container(
+    return Container(
+      padding: EdgeInsets.only(left: 20.0, right: 20.0),
       height: 50.0,
       color: Colors.transparent,
       child: Container(
@@ -135,7 +138,30 @@ class _SignupState extends State<Signup> {
     final form = formKey.currentState;
     if (form.validate()) {
       form.save();
-      await fetchSignup(_email, _password, _username);
+      bool isSignupSuccess = await fetchSignup(_email, _password, _username);
+      if (isSignupSuccess) {
+        Alert(
+          context: context,
+          type: AlertType.none,
+          style: alertStyle,
+          title: "회원가입 완료 👏",
+          buttons: [
+            DialogButton(
+                child: Text(
+                  "로그인 하러가기   >",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold),
+                ),
+                onPressed: () => Navigator.of(context).pushNamed('/login'),
+                width: 170,
+                color: Color(0xff7ACBAA))
+          ],
+        ).show();
+      } else {
+        Alert(context: context, title: "회원가입 실패", desc: "다시 시도해주세요").show();
+      }
     }
   }
 
@@ -150,18 +176,19 @@ class _SignupState extends State<Signup> {
               Container(
                 padding: EdgeInsets.only(top: 35.0, left: 20.0, right: 20.0),
                 child: Form(
+                    key: formKey,
                     child: Column(
-                  children: <Widget>[
-                    _formEmailField(),
-                    SizedBox(height: 10.0),
-                    _formPasswordField(),
-                    SizedBox(height: 10.0),
-                    _formNameField(),
-                    SizedBox(height: 50.0),
-                    _formSubmitButton(),
-                    SizedBox(height: 20.0),
-                  ],
-                )),
+                      children: <Widget>[
+                        _formEmailField(),
+                        SizedBox(height: 10.0),
+                        _formPasswordField(),
+                        SizedBox(height: 10.0),
+                        _formNameField(),
+                        SizedBox(height: 50.0),
+                        _formSubmitButton(),
+                        SizedBox(height: 20.0),
+                      ],
+                    )),
               ),
               _goBackButton()
             ]));
