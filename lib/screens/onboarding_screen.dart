@@ -35,7 +35,6 @@ class _OnboardingState extends State<Onboarding> {
     'tue': false,
     'wed': false,
     'thu': false,
-    'fri': false,
     'sat': false,
     'sun': false
   };

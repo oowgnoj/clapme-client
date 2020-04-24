@@ -4,8 +4,6 @@ import 'package:clapme_client/models/routine_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 var server = 'http://15.164.96.238:5000';
-var accessToken =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJ0ZXN0MDQwNCIsImVtYWlsIjoidGVzdDA0MDRAZ21haWwuY29tIiwicHJvZmlsZSI6bnVsbCwicHJvZmlsZV9waWMiOm51bGx9.bglBCdDIwQ5nsSu6c2W7aO6hRHaBvoEISONpYn5oaDE";
 
 Future<List<Routine>> fetchDayRoutine(dayOfWeek) async {
   print('$server/routine/?day_of_week=$dayOfWeek');
