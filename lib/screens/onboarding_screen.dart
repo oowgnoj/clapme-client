@@ -4,12 +4,14 @@ import 'package:clapme_client/components/daypicker_component.dart';
 import 'package:clapme_client/models/model.dart';
 import 'package:clapme_client/utils/api.dart';
 import 'package:clapme_client/models/model.dart';
+import 'package:clapme_client/utils/common_func.dart';
 
 const mainGrey = Color(0xffF2F2F2);
 final List<String> stepTitle = <String>[
   '목표 달성에 \n힘이 되어 드릴게요',
   '시간은 언제가\n 좋을까요',
-  '반복하고싶은 요일'
+  '반복하고싶은 요일',
+  '일정 등록'
 ];
 final List<String> dayList = <String>[
   'mon',
@@ -29,7 +31,7 @@ class Onboarding extends StatefulWidget {
 class _OnboardingState extends State<Onboarding> {
   int currentPage = 0;
   String routineTitle;
-  DateTime alarmTime;
+  DateTime alarmTime = DateTime.now();
   Map<String, dynamic> alarmDays = {
     'mon': false,
     'tue': false,
@@ -88,26 +90,16 @@ class _OnboardingState extends State<Onboarding> {
   }
 
   Widget build(BuildContext context) {
-    print(routineTitle);
-    print(alarmDays);
-    print('time');
-    print(alarmTime);
-
     return new MaterialApp(
       title: 'Onboarding',
-      theme: ThemeData(
-        primarySwatch: Colors.teal,
-      ),
+      theme: ThemeData(),
       home: new Scaffold(
-        appBar: AppBar(
-          title: Text('Onboarding'),
-        ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-              margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+              padding: EdgeInsets.fromLTRB(20, 70, 0, 0),
+              margin: EdgeInsets.fromLTRB(0, 20, 0, 20),
               child: Text(
                 stepTitle[currentPage],
                 style: TextStyle(
@@ -119,33 +111,63 @@ class _OnboardingState extends State<Onboarding> {
             Container(
                 height: 650,
                 child: currentPage == 0
-                    ? RoutineList(setGoalName)
+                    ? RoutineList(setGoalName, routineTitle)
                     : currentPage == 1
                         ? TimePicker(setAlarmTime: setAlarmTime)
-                        : _DaysList(setAlarmDays, alarmDays)),
+                        : currentPage == 2
+                            ? _DaysList(setAlarmDays, alarmDays)
+                            : ConfirmPage(routineTitle, alarmTime, alarmDays)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.40,
-                  child: RaisedButton(
+                  height: 40,
+                  child: RawMaterialButton(
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(10.0),
+                    ),
+                    fillColor: Color.fromRGBO(5, 121, 126, 1),
                     onPressed: () {
-                      setState(() {
-                        currentPage = currentPage - 1;
-                      });
+                      if (currentPage == 0) {
+                        Navigator.of(context).pop();
+                      } else {
+                        setState(() {
+                          currentPage = currentPage - 1;
+                        });
+                      }
                     },
-                    child: Text('뒤로가기'),
+                    child: Text(
+                      '뒤로가기',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15),
+                    ),
                   ),
                 ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.40,
-                  child: RaisedButton(
+                  height: 40,
+                  child: RawMaterialButton(
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(10.0),
+                    ),
+                    fillColor: Color.fromRGBO(5, 121, 126, 1),
                     onPressed: () async {
                       setState(() {
                         currentPage = currentPage + 1;
                       });
                     },
-                    child: Text('다음으로'),
+                    child: Text(
+                      '다음으로',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15),
+                    ),
                   ),
                 )
               ],
@@ -158,8 +180,9 @@ class _OnboardingState extends State<Onboarding> {
 }
 
 class RoutineList extends StatefulWidget {
-  RoutineList(this.handleState);
+  RoutineList(this.handleState, this.routineTitle);
   final Function handleState;
+  final String routineTitle;
 
   @override
   _RoutineListState createState() => _RoutineListState();
@@ -193,32 +216,38 @@ class _RoutineListState extends State<RoutineList> {
                           },
                           child: Container(
                               margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                              padding: EdgeInsets.all(20),
-                              color: selected == index
-                                  ? Colors.grey[300]
-                                  : Color.fromRGBO(241, 241, 241, 50),
+                              padding: EdgeInsets.fromLTRB(0, 20, 20, 20),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                      bottom: BorderSide(
+                                          color: selected == index
+                                              ? Color.fromRGBO(5, 121, 126, 1)
+                                              : Colors.grey[300]))),
                               child: Text(
                                 '${list[index].title}',
                                 style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 20),
+                                    fontWeight: FontWeight.w600, fontSize: 20),
                               )),
                         );
                       }),
                 ),
                 new GestureDetector(
                   onTap: () {
+                    _displayDialog(context, widget.handleState);
                     setState(() {
                       selected = 100;
                     });
-                    _displayDialog(context, widget.handleState);
                   },
                   child: Container(
-                    child: Text('사용자 입력',
+                    child: Text(
+                        selected != 100 ? 'custom' : widget.routineTitle,
                         style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20)),
+                            fontWeight: FontWeight.w600, fontSize: 20)),
                     margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                    padding: EdgeInsets.all(20),
-                    color: Color.fromRGBO(241, 241, 241, 10000),
+                    padding: EdgeInsets.fromLTRB(0, 20, 20, 20),
+                    decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(color: Colors.grey[300]))),
                     height: 70,
                     width: 350,
                   ),
@@ -288,9 +317,9 @@ class __DaysListState extends State<_DaysList> {
                             },
                             child: new Text(day),
                             shape: new CircleBorder(),
-                            elevation: 2.0,
+                            elevation: 3.0,
                             fillColor: widget.alarmDays[day] == true
-                                ? Colors.grey
+                                ? Color.fromRGBO(235, 235, 235, 1)
                                 : Colors.white,
                             padding: const EdgeInsets.all(15),
                           ),
@@ -300,15 +329,18 @@ class __DaysListState extends State<_DaysList> {
             child: Row(
                 children: _shortcutList
                     .map<Widget>((shortcut) => Expanded(
-                          child: RawMaterialButton(
-                            onPressed: () {
-                              widget.setAlarmDays(shortcut);
-                            },
-                            child: new Text(shortcut),
-                            shape: new CircleBorder(),
-                            elevation: 2.0,
-                            fillColor: Colors.white,
-                            padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(30, 10, 30, 0),
+                            child: RawMaterialButton(
+                              onPressed: () {
+                                widget.setAlarmDays(shortcut);
+                              },
+                              child: new Text(shortcut),
+                              shape: new RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30)),
+                              fillColor: Color.fromRGBO(235, 235, 235, 1),
+                              padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                            ),
                           ),
                         ))
                     .toList())),
@@ -316,3 +348,98 @@ class __DaysListState extends State<_DaysList> {
     );
   }
 }
+
+class ConfirmPage extends StatelessWidget {
+  ConfirmPage(this.routineTitle, this.alarmTime, this.alarmDays);
+  final routineTitle;
+  final alarmTime;
+  final alarmDays;
+
+  @override
+  Widget build(BuildContext context) {
+    var textStyle = TextStyle(
+      color: Color(0xFFD3D3D3),
+      fontWeight: FontWeight.bold,
+      fontSize: 30,
+      decoration: TextDecoration.underline,
+    );
+    return (new Stack(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.fromLTRB(30, 0, 30, 30),
+          child: new Container(
+              padding: EdgeInsets.fromLTRB(0, 60, 30, 30),
+              child: Container(
+                child: new Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          convertDayBooltoStr(alarmDays),
+                          style: textStyle,
+                        )
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          alarmTime.hour.toString() +
+                              ":" +
+                              alarmTime.minute.toString(),
+                          style: textStyle,
+                        ),
+                        Text(
+                          ' 에',
+                          style: TextStyle(color: Colors.black, fontSize: 30),
+                        )
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      children: <Widget>[
+                        Text(routineTitle, style: textStyle),
+                        Text(
+                          ' 를/을 ',
+                          style: TextStyle(color: Colors.black, fontSize: 30),
+                        )
+                      ],
+                    ),
+                    SizedBox(height: 50),
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          '실천할거에요!',
+                          style: TextStyle(color: Colors.black, fontSize: 30),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              )),
+        )
+      ],
+    ));
+  }
+}
+
+// class TimePicker extends StatelessWidget {
+//   // super constructor
+//   TimePicker({Key key, this.setAlarmTime}) : super(key: key);
+//   final Function(DateTime) setAlarmTime;
+
+//   // constructor :
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       height: MediaQuery.of(context).size.height / 4,
+//       child: CupertinoDatePicker(
+//           mode: CupertinoDatePickerMode.time,
+//           use24hFormat: false,
+//           onDateTimeChanged: (DateTime changedTime) {
+//             setAlarmTime(changedTime);
+//           }),
+//     );
+//   }
+// }

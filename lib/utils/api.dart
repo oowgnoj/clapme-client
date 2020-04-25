@@ -6,7 +6,7 @@ import 'package:clapme_client/models/model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 String localServer = 'http://0.0.0.0:5000';
-String stageServer = 'http://192.168.35.248:5000';
+String stageServer = 'http://15.164.96.238:5000';
 
 Future<Object> getRecommendList() async {
   final response = await Requests.get(localServer + '/routine-recommend-list');
