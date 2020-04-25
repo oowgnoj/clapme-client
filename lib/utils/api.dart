@@ -9,7 +9,8 @@ String localServer = 'http://0.0.0.0:5000';
 String stageServer = 'http://15.164.96.238:5000';
 
 Future<Object> getRecommendList() async {
-  final response = await Requests.get(localServer + '/routine-recommend-list');
+  final response = await Requests.get(stageServer + '/routine-recommend-list');
+  print(response.statusCode);
   if (response.statusCode == 200) {
     var list = response.json() as List;
     var res = list.map((el) => Routine.fromJson(el)).toList();
@@ -23,21 +24,27 @@ Future<Object> postRoutine(body) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String accessToken = prefs.getString('accessToken');
 
+  print(body);
+  print(jsonEncode(body));
+
   var headers = <String, String>{
     'Content-Type': 'application/json; charset=UTF-8',
     'Authorization': accessToken
   };
 
-  final response = await Requests.post(
-    localServer + '/routine/',
+  print('------------------- headers');
+  print(headers);
+
+  final response = await http.post(
+    stageServer + '/routine',
     headers: headers,
-    body: body,
+    body: jsonEncode(body),
   );
   if (response.statusCode == 200) {
-    print(response.json());
+    print('성공');
     return true;
   } else {
-    print(response.json());
+    print('실패');
     return false;
   }
 }

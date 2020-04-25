@@ -133,7 +133,7 @@ class _LoginState extends State<Login> {
                 context: context,
                 type: AlertType.none,
                 style: alertFailedStyle,
-                title: "회원가입 실패 🤔",
+                title: "로그인 실패 🤔",
                 desc: "다시 시도해주세요")
             .show();
       }

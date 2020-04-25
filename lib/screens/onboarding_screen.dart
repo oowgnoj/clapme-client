@@ -5,6 +5,8 @@ import 'package:clapme_client/models/model.dart';
 import 'package:clapme_client/utils/api.dart';
 import 'package:clapme_client/models/model.dart';
 import 'package:clapme_client/utils/common_func.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:clapme_client/utils/alert_style.dart';
 
 const mainGrey = Color(0xffF2F2F2);
 final List<String> stepTitle = <String>[
@@ -37,6 +39,7 @@ class _OnboardingState extends State<Onboarding> {
     'tue': false,
     'wed': false,
     'thu': false,
+    'fri': false,
     'sat': false,
     'sun': false
   };
@@ -109,7 +112,7 @@ class _OnboardingState extends State<Onboarding> {
               ),
             ),
             Container(
-                height: 650,
+                height: 300,
                 child: currentPage == 0
                     ? RoutineList(setGoalName, routineTitle)
                     : currentPage == 1
@@ -157,9 +160,35 @@ class _OnboardingState extends State<Onboarding> {
                     ),
                     fillColor: Color.fromRGBO(5, 121, 126, 1),
                     onPressed: () async {
-                      setState(() {
-                        currentPage = currentPage + 1;
-                      });
+                      if (currentPage == 3) {
+                        Map<String, String> body = {
+                          'title': routineTitle,
+                          'time_at': alarmTime.hour.toString(),
+                          'mon': alarmDays['mon'].toString(),
+                          'tue': alarmDays['tue'].toString(),
+                          'wed': alarmDays['wed'].toString(),
+                          'thu': alarmDays['thu'].toString(),
+                          'fri': alarmDays['fri'].toString(),
+                          'sat': alarmDays['sat'].toString(),
+                          'sun': alarmDays['sun'].toString()
+                        };
+                        bool isPostSuccess = await postRoutine(body);
+                        if (isPostSuccess) {
+                          Navigator.of(context).pushNamed('/routinelist');
+                        } else {
+                          Alert(
+                                  context: context,
+                                  type: AlertType.none,
+                                  style: alertFailedStyle,
+                                  title: "등록 실패 🤔",
+                                  desc: "다시 시도해주세요")
+                              .show();
+                        }
+                      } else {
+                        setState(() {
+                          currentPage = currentPage + 1;
+                        });
+                      }
                     },
                     child: Text(
                       '다음으로',

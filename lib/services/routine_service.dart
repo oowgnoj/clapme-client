@@ -6,15 +6,20 @@ import 'package:shared_preferences/shared_preferences.dart';
 var server = 'http://15.164.96.238:5000';
 
 Future<List<Routine>> fetchDayRoutine(dayOfWeek) async {
-  print('$server/routine/?day_of_week=$dayOfWeek');
+  print('여기부터 루틴이다 -------------- ');
+  print('$server/routine?day_of_week=$dayOfWeek');
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String accessToken = prefs.getString('accessToken');
 
-  final response = await http.get('$server/routine/?day_of_week=$dayOfWeek',
+  final response = await http.get('$server/routine?day_of_week=$dayOfWeek',
       headers: {"Authorization": accessToken});
 
+  print(response.statusCode);
+
   if (response.statusCode == 200) {
+    print('-성공-routine');
+    print(json.decode(response.body) as List);
     return (json.decode(response.body) as List)
         .expand((data) =>
             [if (data['$dayOfWeek']) new Routine.fromJson(data)].toList())
@@ -24,6 +29,7 @@ Future<List<Routine>> fetchDayRoutine(dayOfWeek) async {
     var temp = Routine(
         id: 1,
         goalId: 3,
+        title: '안녕?',
         mon: true,
         tue: false,
         wed: false,
@@ -31,8 +37,8 @@ Future<List<Routine>> fetchDayRoutine(dayOfWeek) async {
         fri: false,
         sat: false,
         sun: false,
-        timeAt: 200,
-        createdAt: '0000-00-00 00:00');
+        timeAt: 200);
+    // createdAt: '0000-00-00 00:00');
     return [temp];
   }
 }
