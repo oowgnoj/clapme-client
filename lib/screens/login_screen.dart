@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:clapme_client/services/auth_service.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:clapme_client/utils/alert_style.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -123,8 +125,18 @@ class _LoginState extends State<Login> {
     final form = formKey.currentState;
     if (form.validate()) {
       form.save();
-      var isLoginSuccess = await fetchLogin(_email, _password);
-      if (isLoginSuccess) Navigator.of(context).pushNamed('/');
+      bool isLoginSuccess = await fetchLogin(_email, _password);
+      if (isLoginSuccess) {
+        Navigator.of(context).pushNamed('/onboarding');
+      } else {
+        Alert(
+                context: context,
+                type: AlertType.none,
+                style: alertFailedStyle,
+                title: "로그인 실패 🤔",
+                desc: "다시 시도해주세요")
+            .show();
+      }
     }
   }
 

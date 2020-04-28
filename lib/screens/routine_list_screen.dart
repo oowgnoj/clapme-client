@@ -101,7 +101,7 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
         children: <Widget>[
           ListTile(
             leading: Icon(Icons.access_time),
-            title: Text('아침 스트레칭'), // 타이틀 오면 바꿀것
+            title: Text(routine.title), // 타이틀 오면 바꿀것
             subtitle: Text(routine.timeAt.toString()),
           ),
           ButtonBar(
