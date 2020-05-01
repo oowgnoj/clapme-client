@@ -34,6 +34,25 @@ class _OnboardingState extends State<Onboarding> {
   int currentPage = 0;
   String routineTitle;
   DateTime alarmTime = DateTime.now();
+
+  List pageInputValidator = [false, false, false, false];
+
+  // bool validatePage() {
+  //   switch (currentPage) {
+  //     case 0:
+  //       if (routineTitle == '') {
+  //         Alert(
+  //                 context: context,
+  //                 type: AlertType.none,
+  //                 style: alertFailedStyle,
+  //                 title: "routine을 입력해주세요 🤔",
+  //                 desc: "다시 시도해주세요")
+  //             .show();
+  //         return false;
+  //       }
+  //   }
+  // }
+
   Map<String, dynamic> alarmDays = {
     'mon': false,
     'tue': false,
@@ -46,17 +65,22 @@ class _OnboardingState extends State<Onboarding> {
 
   setGoalName(target) {
     setState(() {
+      pageInputValidator[0] = true;
       routineTitle = target;
     });
   }
 
   setAlarmTime(target) {
     setState(() {
+      pageInputValidator[1] = true;
       alarmTime = target;
     });
   }
 
   setAlarmDays(target) {
+    setState(() {
+      pageInputValidator[2] = true;
+    });
     switch (target) {
       case 'weekdays':
         setState(() {
@@ -80,6 +104,17 @@ class _OnboardingState extends State<Onboarding> {
           alarmDays['sun'] = true;
         });
         break;
+      case 'reset':
+        setState(() {
+          alarmDays['mon'] = false;
+          alarmDays['tue'] = false;
+          alarmDays['wed'] = false;
+          alarmDays['thu'] = false;
+          alarmDays['fri'] = false;
+          alarmDays['sat'] = false;
+          alarmDays['sun'] = false;
+        });
+        break;
       default:
         setState(() {
           alarmDays[target] = !alarmDays[target];
@@ -93,6 +128,18 @@ class _OnboardingState extends State<Onboarding> {
   }
 
   Widget build(BuildContext context) {
+    Map<String, String> body = {
+      'title': routineTitle,
+      'time_at': alarmTime.hour.toString(),
+      'mon': alarmDays['mon'].toString(),
+      'tue': alarmDays['tue'].toString(),
+      'wed': alarmDays['wed'].toString(),
+      'thu': alarmDays['thu'].toString(),
+      'fri': alarmDays['fri'].toString(),
+      'sat': alarmDays['sat'].toString(),
+      'sun': alarmDays['sun'].toString()
+    };
+
     return new MaterialApp(
       title: 'Onboarding',
       theme: ThemeData(),
@@ -112,7 +159,7 @@ class _OnboardingState extends State<Onboarding> {
               ),
             ),
             Container(
-                height: 300,
+                height: MediaQuery.of(context).size.height * 0.70,
                 child: currentPage == 0
                     ? RoutineList(setGoalName, routineTitle)
                     : currentPage == 1
@@ -161,17 +208,7 @@ class _OnboardingState extends State<Onboarding> {
                     fillColor: Color.fromRGBO(5, 121, 126, 1),
                     onPressed: () async {
                       if (currentPage == 3) {
-                        Map<String, String> body = {
-                          'title': routineTitle,
-                          'time_at': alarmTime.hour.toString(),
-                          'mon': alarmDays['mon'].toString(),
-                          'tue': alarmDays['tue'].toString(),
-                          'wed': alarmDays['wed'].toString(),
-                          'thu': alarmDays['thu'].toString(),
-                          'fri': alarmDays['fri'].toString(),
-                          'sat': alarmDays['sat'].toString(),
-                          'sun': alarmDays['sun'].toString()
-                        };
+                        // 등록페이지 post 요청
                         bool isPostSuccess = await postRoutine(body);
                         if (isPostSuccess) {
                           Navigator.of(context).pushNamed('/routinelist');
@@ -185,9 +222,19 @@ class _OnboardingState extends State<Onboarding> {
                               .show();
                         }
                       } else {
-                        setState(() {
-                          currentPage = currentPage + 1;
-                        });
+                        if (pageInputValidator[currentPage]) {
+                          setState(() {
+                            currentPage = currentPage + 1;
+                          });
+                        } else {
+                          Alert(
+                                  context: context,
+                                  type: AlertType.none,
+                                  style: alertFailedStyle,
+                                  title: "입력해주세요 ⭐️",
+                                  desc: "다시 시도해주세요")
+                              .show();
+                        }
                       }
                     },
                     child: Text(
@@ -328,7 +375,7 @@ class _DaysList extends StatefulWidget {
 
 class __DaysListState extends State<_DaysList> {
   List<String> _dayslist = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
-  List<String> _shortcutList = ['weekdays', 'weekends'];
+  List<String> _shortcutList = ['weekdays', 'weekends', 'reset'];
 
   Map<String, dynamic> colorMap = {'on': Colors.grey, 'off': Colors.white};
 
@@ -356,10 +403,12 @@ class __DaysListState extends State<_DaysList> {
                     .toList())),
         Container(
             child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: _shortcutList
-                    .map<Widget>((shortcut) => Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(30, 10, 30, 0),
+                    .map<Widget>((shortcut) => Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                          child: ButtonTheme(
+                            minWidth: 200,
                             child: RawMaterialButton(
                               onPressed: () {
                                 widget.setAlarmDays(shortcut);
@@ -368,7 +417,6 @@ class __DaysListState extends State<_DaysList> {
                               shape: new RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30)),
                               fillColor: Color.fromRGBO(235, 235, 235, 1),
-                              padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
                             ),
                           ),
                         ))
