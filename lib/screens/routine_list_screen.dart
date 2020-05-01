@@ -78,6 +78,16 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
 
     if (isDateMarked == true) {
       _children.add(getMarkedIndicatorWidget());
+    } else {
+      _children.add(Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Container(
+          margin: EdgeInsets.only(left: 1, right: 1),
+          width: 6,
+          height: 6,
+          decoration:
+              BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+        ),
+      ]));
     }
 
     return AnimatedContainer(
