@@ -11,19 +11,16 @@ class RoutineListScreen extends StatefulWidget {
 }
 
 class _RoutineListScreenState extends State<RoutineListScreen> {
+  // 달력뷰 데이터
   DateTime startDate = DateTime.now().subtract(Duration(days: 30));
   DateTime endDate = DateTime.now().add(Duration(days: 0));
   DateTime selectedDate = DateTime.now();
+  List<DateTime> markedDates;
+
   String selectedDayOfWeek =
-      DateFormat('E').format(DateTime.now()).toLowerCase();
-
-  List<DateTime> markedDates = [
-    /* DateTime.now().subtract(Duration(days: 1)),
-    DateTime.now().subtract(Duration(days: 2)), */
-  ];
-
-  Future<List<Routine>> weeklyRoutines;
-  Schedule weeklySchedule;
+      DateFormat('E').format(DateTime.now()).toLowerCase(); // 선택된 요일
+  Future<List<Routine>> weeklyRoutines; // 주간 루틴 정보
+  Schedule weeklySchedule; // 주단위 요일별 루틴 여부
 
   @override
   initState() {
@@ -42,6 +39,7 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
   }
 
   List<DateTime> getScheduledDatetimes() {
+    // 달력뷰에 포함되는 날짜 중 루틴이 등록된 datetime 반환
     var day = startDate;
     List<DateTime> datetimes = [];
 
@@ -54,6 +52,7 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
   }
 
   setWeeklySchedule(list) {
+    // 주간 루틴 정보 weeklyRoutines 토대로 요일별 루틴 여부를 관리하는 스케쥴 업데이트
     Schedule schedule = new Schedule();
     list.forEach((routine) => {
           routine
@@ -63,19 +62,11 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
     weeklySchedule = schedule;
   }
 
-  getSelectedRoutine(list) {
+  List<Routine> getSelectedRoutine(list) {
+    // 선택한 요일에 해당하는 루틴 리스트 반환
     return list
         .where((data) => data.isScheduled(selectedDayOfWeek) == true)
         .toList();
-  }
-
-  _monthNameWidget(monthName) {
-    return Container(
-//      child: Text(monthName,
-//          style:
-//          TextStyle(fontSize: 17, fontWeight: FontWeight.w300, color: Colors.black87)),
-      padding: EdgeInsets.only(top: 11, bottom: 4),
-    );
   }
 
   getMarkedIndicatorWidget() {
@@ -133,6 +124,12 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
     );
   }
 
+  _blank(monthName) {
+    return Container(
+      padding: EdgeInsets.only(top: 11, bottom: 4),
+    );
+  }
+
   _buildRoutineCard(Routine routine) {
     return Card(
       child: Column(
@@ -159,38 +156,47 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: FutureBuilder(
-            future: weeklyRoutines,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                setWeeklySchedule(snapshot.data);
-                markedDates = getScheduledDatetimes();
-                print(markedDates);
+      body: FutureBuilder(
+          future: weeklyRoutines,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              setWeeklySchedule(snapshot.data);
+              markedDates = getScheduledDatetimes();
+              print(markedDates);
 
-                return Container(
-                    child: ListView(children: <Widget>[
-                  CalendarStrip(
-                    startDate: startDate,
-                    endDate: endDate,
-                    onDateSelected: onSelect,
-                    dateTileBuilder: dateTileBuilder,
-                    iconColor: Colors.black87,
-                    monthNameWidget: _monthNameWidget,
-                    markedDates: markedDates,
-                    containerDecoration: BoxDecoration(color: Colors.white),
-                  ),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: getSelectedRoutine(snapshot.data).length,
-                    itemBuilder: (BuildContext context, int index) {
-                      Routine routine =
-                          getSelectedRoutine(snapshot.data)[index];
-                      return _buildRoutineCard(routine);
-                    },
-                  )
-                ]));
-              } else if (snapshot.hasError) {}
-              return CircularProgressIndicator();
-            }));
+              return Container(
+                  child: ListView(children: <Widget>[
+                CalendarStrip(
+                  startDate: startDate,
+                  endDate: endDate,
+                  onDateSelected: onSelect,
+                  dateTileBuilder: dateTileBuilder,
+                  iconColor: Colors.black87,
+                  monthNameWidget: _blank,
+                  markedDates: markedDates,
+                  containerDecoration: BoxDecoration(color: Colors.white),
+                ),
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: getSelectedRoutine(snapshot.data).length,
+                  itemBuilder: (BuildContext context, int index) {
+                    Routine routine = getSelectedRoutine(snapshot.data)[index];
+                    return _buildRoutineCard(routine);
+                  },
+                )
+              ]));
+            } else if (snapshot.hasError) {}
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed('/onboarding');
+        },
+        child: Icon(Icons.add),
+        backgroundColor: Color(0xff7ACBAA),
+      ),
+    );
   }
 }

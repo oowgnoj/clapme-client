@@ -50,6 +50,7 @@ class Routine {
   }
 
   isScheduled(String dayOfWeek) {
+    // 해당 루틴에 특정 요일 알람이 설정되었는지 여부 반환
     switch (dayOfWeek) {
       case 'mon':
         return this.mon;
@@ -69,6 +70,7 @@ class Routine {
   }
 
   getScheduledWeekdaysOfRoutine() {
+    // 해당 루틴 알람 요일들 반환
     List<String> weekdays = [];
     if (this.mon == true) weekdays.add('mon');
     if (this.tue == true) weekdays.add('tue');
