@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:calendar_strip/calendar_strip.dart';
 import 'package:clapme_client/models/routine_model.dart';
+import 'package:clapme_client/models/schedule_model.dart';
 import 'package:clapme_client/services/routine_service.dart';
 import 'package:intl/intl.dart';
 
@@ -10,23 +11,24 @@ class RoutineListScreen extends StatefulWidget {
 }
 
 class _RoutineListScreenState extends State<RoutineListScreen> {
-  DateTime startDate = DateTime.now().subtract(Duration(days: 6));
+  DateTime startDate = DateTime.now().subtract(Duration(days: 30));
   DateTime endDate = DateTime.now().add(Duration(days: 0));
   DateTime selectedDate = DateTime.now();
   String selectedDayOfWeek =
       DateFormat('E').format(DateTime.now()).toLowerCase();
 
   List<DateTime> markedDates = [
-    DateTime.now().subtract(Duration(days: 1)),
-    DateTime.now().subtract(Duration(days: 2)),
+    /* DateTime.now().subtract(Duration(days: 1)),
+    DateTime.now().subtract(Duration(days: 2)), */
   ];
 
-  Future<List<Routine>> routineList;
+  Future<List<Routine>> weeklyRoutines;
+  Schedule weeklySchedule;
 
   @override
   initState() {
     super.initState();
-    routineList =
+    weeklyRoutines =
         fetchDayRoutine(DateFormat('E').format(DateTime.now()).toLowerCase());
   }
 
@@ -34,10 +36,37 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
     setState(() => {
           selectedDate = data,
           selectedDayOfWeek = DateFormat('E').format(data).toLowerCase(),
-          routineList = fetchDayRoutine(selectedDayOfWeek)
         });
 
     print("Selected Date -> $data $selectedDayOfWeek");
+  }
+
+  List<DateTime> getScheduledDatetimes() {
+    var day = startDate;
+    List<DateTime> datetimes = [];
+
+    while (day.compareTo(endDate) < 0) {
+      String dayOfWeek = DateFormat('E').format(day).toLowerCase();
+      if (weeklySchedule.isScheduled(dayOfWeek) == true) datetimes.add(day);
+      day = day.add(new Duration(days: 1));
+    }
+    return datetimes;
+  }
+
+  setWeeklySchedule(list) {
+    Schedule schedule = new Schedule();
+    list.forEach((routine) => {
+          routine
+              .getScheduledWeekdaysOfRoutine()
+              .forEach((weekday) => schedule.setSchedule(weekday))
+        });
+    weeklySchedule = schedule;
+  }
+
+  getSelectedRoutine(list) {
+    return list
+        .where((data) => data.isScheduled(selectedDayOfWeek) == true)
+        .toList();
   }
 
   _monthNameWidget(monthName) {
@@ -130,36 +159,38 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-          child: ListView(children: <Widget>[
-        CalendarStrip(
-          startDate: startDate,
-          endDate: endDate,
-          onDateSelected: onSelect,
-          dateTileBuilder: dateTileBuilder,
-          iconColor: Colors.black87,
-          monthNameWidget: _monthNameWidget,
-          markedDates: markedDates,
-          containerDecoration: BoxDecoration(color: Colors.white),
-        ),
-        FutureBuilder(
-            future: routineList,
+        body: FutureBuilder(
+            future: weeklyRoutines,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    Routine routine = snapshot.data[index];
-                    return _buildRoutineCard(routine);
-                  },
-                );
-              } else if (snapshot.hasError) {
-                return Text("${snapshot.error}");
-              }
+                setWeeklySchedule(snapshot.data);
+                markedDates = getScheduledDatetimes();
+                print(markedDates);
+
+                return Container(
+                    child: ListView(children: <Widget>[
+                  CalendarStrip(
+                    startDate: startDate,
+                    endDate: endDate,
+                    onDateSelected: onSelect,
+                    dateTileBuilder: dateTileBuilder,
+                    iconColor: Colors.black87,
+                    monthNameWidget: _monthNameWidget,
+                    markedDates: markedDates,
+                    containerDecoration: BoxDecoration(color: Colors.white),
+                  ),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: getSelectedRoutine(snapshot.data).length,
+                    itemBuilder: (BuildContext context, int index) {
+                      Routine routine =
+                          getSelectedRoutine(snapshot.data)[index];
+                      return _buildRoutineCard(routine);
+                    },
+                  )
+                ]));
+              } else if (snapshot.hasError) {}
               return CircularProgressIndicator();
-            })
-      ])),
-    );
+            }));
   }
 }

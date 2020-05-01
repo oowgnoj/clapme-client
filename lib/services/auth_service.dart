@@ -4,8 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:clapme_client/models/user_model.dart';
 
-var server = 'http://15.164.96.238:5000';
-// var server = 'http://10.0.2.2:3004';
+// var server = 'http://15.164.96.238:5000';
+var server = 'http://10.0.2.2:5000';
 
 Future<bool> fetchLogin(email, password) async {
   var body = jsonEncode({'email': email, 'password': password});

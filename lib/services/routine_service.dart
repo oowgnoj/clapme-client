@@ -3,7 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:clapme_client/models/routine_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-var server = 'http://15.164.96.238:5000';
+// var server = 'http://15.164.96.238:5000';
+var server = 'http://10.0.2.2:5000';
 
 Future<List<Routine>> fetchDayRoutine(dayOfWeek) async {
   print('여기부터 루틴이다 -------------- ');
@@ -19,11 +20,14 @@ Future<List<Routine>> fetchDayRoutine(dayOfWeek) async {
 
   if (response.statusCode == 200) {
     print('-성공-routine');
-    print(json.decode(response.body) as List);
+
     return (json.decode(response.body) as List)
+        .map((i) => new Routine.fromJson(i))
+        .toList();
+    /* return (json.decode(response.body) as List)
         .expand((data) =>
             [if (data['$dayOfWeek']) new Routine.fromJson(data)].toList())
-        .toList();
+        .toList(); */
   } else {
     print(response.headers);
     var temp = Routine(

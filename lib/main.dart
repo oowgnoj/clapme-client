@@ -10,8 +10,7 @@ class Auth {
   Future<bool> isLogged() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String accessToken = prefs.getString('accessToken');
-    print('--------- 토큰! --------');
-    print(accessToken);
+
     if (accessToken == null) {
       return false;
     } else {
