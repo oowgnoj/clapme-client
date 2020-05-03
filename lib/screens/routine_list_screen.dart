@@ -45,7 +45,7 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
 
     while (day.compareTo(endDate) < 0) {
       String dayOfWeek = DateFormat('E').format(day).toLowerCase();
-      if (weeklySchedule.isScheduled(dayOfWeek) == true) datetimes.add(day);
+      if (weeklySchedule.countRoutines(dayOfWeek) > 0) datetimes.add(day);
       day = day.add(new Duration(days: 1));
     }
     return datetimes;
@@ -53,11 +53,11 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
 
   setWeeklySchedule(list) {
     // 주간 루틴 정보 weeklyRoutines 토대로 요일별 루틴 여부를 관리하는 스케쥴 업데이트
-    Schedule schedule = new Schedule();
+    Schedule schedule = new Schedule().initialize();
     list.forEach((routine) => {
           routine
               .getScheduledWeekdaysOfRoutine()
-              .forEach((weekday) => schedule.setSchedule(weekday))
+              .forEach((weekday) => schedule.setSchedule(routine, weekday))
         });
     weeklySchedule = schedule;
   }
@@ -162,7 +162,6 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
             if (snapshot.hasData) {
               setWeeklySchedule(snapshot.data);
               markedDates = getScheduledDatetimes();
-              print(markedDates);
 
               return Container(
                   child: ListView(children: <Widget>[
