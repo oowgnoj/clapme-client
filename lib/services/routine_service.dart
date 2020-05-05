@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:clapme_client/models/routine_model.dart';
+import 'package:clapme_client/services/alarm_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // var server = 'http://15.164.96.238:5000';
@@ -21,9 +22,13 @@ Future<List<Routine>> fetchDayRoutine(dayOfWeek) async {
   if (response.statusCode == 200) {
     print('-성공-routine');
 
-    return (json.decode(response.body) as List)
+    List<Routine> routines = (json.decode(response.body) as List)
         .map((i) => new Routine.fromJson(i))
         .toList();
+
+    await setWeeklyPush(routines);
+
+    return routines;
     /* return (json.decode(response.body) as List)
         .expand((data) =>
             [if (data['$dayOfWeek']) new Routine.fromJson(data)].toList())

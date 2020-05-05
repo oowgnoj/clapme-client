@@ -1075,3 +1075,4 @@ class SecondScreenState extends State<SecondScreen> {
       ),
     );
   }
+}
