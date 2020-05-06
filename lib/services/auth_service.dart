@@ -26,7 +26,6 @@ Future<bool> fetchLogin(email, password) async {
     await prefs.setString('username', decoded.username);
     await prefs.setString('profile', decoded.profile);
     await prefs.setString('profile', decoded.profilePic);
-    print(decoded.username);
     return true;
   } else {
     return false;

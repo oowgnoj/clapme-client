@@ -25,7 +25,7 @@ Future<List<Routine>> fetchDayRoutine(dayOfWeek) async {
             [if (data['$dayOfWeek']) new Routine.fromJson(data)].toList())
         .toList();
   } else {
-    print(response.headers);
+    print(response);
     var temp = Routine(
         id: 1,
         goalId: 3,
