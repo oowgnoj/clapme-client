@@ -128,8 +128,8 @@ class _OnboardingState extends State<Onboarding> {
       title: 'Onboarding',
       theme: ThemeData(),
       home: new Scaffold(
-        resizeToAvoidBottomInset: false, // set it to false
         body: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
@@ -251,18 +251,18 @@ class RoutineList extends StatefulWidget {
 class _RoutineListState extends State<RoutineList> {
   int selected;
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: FutureBuilder(
-          future: getRecommendList(),
-          builder: (context, AsyncSnapshot snapshot) {
-            if (!snapshot.hasData) {
-              return Center(child: CircularProgressIndicator());
-            } else {
-              return Container(
+    return FutureBuilder(
+        future: getRecommendList(),
+        builder: (context, AsyncSnapshot snapshot) {
+          if (!snapshot.hasData) {
+            return Center(child: CircularProgressIndicator());
+          } else {
+            return SingleChildScrollView(
+              child: new Container(
                   child: Column(
                 children: <Widget>[
                   Container(
-                    height: 500,
+                    height: MediaQuery.of(context).size.height * 0.45,
                     child: ListView.builder(
                         padding: const EdgeInsets.all(8),
                         itemCount: snapshot.data.length,
@@ -306,7 +306,7 @@ class _RoutineListState extends State<RoutineList> {
                           style: TextStyle(
                               fontWeight: FontWeight.w600, fontSize: 20)),
                       margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                      padding: EdgeInsets.fromLTRB(0, 20, 20, 20),
+                      padding: EdgeInsets.fromLTRB(8, 20, 20, 20),
                       decoration: BoxDecoration(
                           border: Border(
                               bottom: BorderSide(color: Colors.grey[300]))),
@@ -315,10 +315,10 @@ class _RoutineListState extends State<RoutineList> {
                     ),
                   ),
                 ],
-              ));
-            }
-          }),
-    );
+              )),
+            );
+          }
+        });
   }
 }
 
