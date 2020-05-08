@@ -32,7 +32,7 @@ class Onboarding extends StatefulWidget {
 
 class _OnboardingState extends State<Onboarding> {
   int currentPage = 0;
-  String routineTitle;
+  String routineTitle = 'custom';
   DateTime alarmTime = DateTime.now();
 
   List pageInputValidator = [false, false, false, false];
@@ -302,7 +302,7 @@ class _RoutineListState extends State<RoutineList> {
                     },
                     child: Container(
                       child: Text(
-                          selected != 100 ? 'custom' : widget.routineTitle,
+                          selected == 100 ? widget.routineTitle : 'custom',
                           style: TextStyle(
                               fontWeight: FontWeight.w600, fontSize: 20)),
                       margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
