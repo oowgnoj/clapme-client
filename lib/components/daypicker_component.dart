@@ -11,8 +11,9 @@ class TimePicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height / 4,
+      height: MediaQuery.of(context).size.height / 10,
       child: CupertinoDatePicker(
+          backgroundColor: Color.fromRGBO(249, 249, 249, 1),
           mode: CupertinoDatePickerMode.time,
           use24hFormat: false,
           onDateTimeChanged: (DateTime changedTime) {

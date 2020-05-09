@@ -1,4 +1,6 @@
+import 'package:clapme_client/main.dart';
 import 'package:clapme_client/screens/onboarding_screen.dart';
+import 'package:clapme_client/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -22,25 +24,47 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         new Container(
             height: 300,
+            margin: const EdgeInsets.only(top: 40.0),
             child: Center(
                 child: Image(image: AssetImage("assets/clapme-icon.png")))),
-        new Center(
-          child: ButtonTheme(
-            minWidth: 200,
-            child: new RaisedButton(
-              color: Colors.white,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Onboarding(),
-                  ),
-                );
-              },
-              child: Text('clapme 시작하기'),
-            ),
-          ),
-        )
+        Padding(
+          padding: const EdgeInsets.only(top: 350.0),
+          child: new Center(
+              child: Column(
+            children: <Widget>[
+              ButtonTheme(
+                minWidth: 200,
+                child: new RaisedButton(
+                  color: Colors.white,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Onboarding(),
+                      ),
+                    );
+                  },
+                  child: Text('clapme 시작하기'),
+                ),
+              ),
+              ButtonTheme(
+                minWidth: 200,
+                child: new RaisedButton(
+                  color: Colors.white,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Login(),
+                      ),
+                    );
+                  },
+                  child: Text('로그인'),
+                ),
+              ),
+            ],
+          )),
+        ),
       ],
     ));
   }

@@ -4,12 +4,16 @@ import 'package:clapme_client/components/daypicker_component.dart';
 import 'package:clapme_client/models/model.dart';
 import 'package:clapme_client/utils/api.dart';
 import 'package:clapme_client/models/model.dart';
+import 'package:clapme_client/utils/common_func.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:clapme_client/utils/alert_style.dart';
 
 const mainGrey = Color(0xffF2F2F2);
 final List<String> stepTitle = <String>[
   '목표 달성에 \n힘이 되어 드릴게요',
   '시간은 언제가\n 좋을까요',
-  '반복하고싶은 요일'
+  '반복하고싶은 요일',
+  '일정 등록'
 ];
 final List<String> dayList = <String>[
   'mon',
@@ -28,30 +32,39 @@ class Onboarding extends StatefulWidget {
 
 class _OnboardingState extends State<Onboarding> {
   int currentPage = 0;
-  String routineTitle;
-  DateTime alarmTime;
+  String routineTitle = 'custom';
+  DateTime alarmTime = DateTime.now();
+
+  List pageInputValidator = [false, false, false, false];
+
   Map<String, dynamic> alarmDays = {
     'mon': false,
     'tue': false,
     'wed': false,
     'thu': false,
+    'fri': false,
     'sat': false,
     'sun': false
   };
 
   setGoalName(target) {
     setState(() {
+      pageInputValidator[0] = true;
       routineTitle = target;
     });
   }
 
   setAlarmTime(target) {
     setState(() {
+      pageInputValidator[1] = true;
       alarmTime = target;
     });
   }
 
   setAlarmDays(target) {
+    setState(() {
+      pageInputValidator[2] = true;
+    });
     switch (target) {
       case 'weekdays':
         setState(() {
@@ -75,6 +88,17 @@ class _OnboardingState extends State<Onboarding> {
           alarmDays['sun'] = true;
         });
         break;
+      case 'reset':
+        setState(() {
+          alarmDays['mon'] = false;
+          alarmDays['tue'] = false;
+          alarmDays['wed'] = false;
+          alarmDays['thu'] = false;
+          alarmDays['fri'] = false;
+          alarmDays['sat'] = false;
+          alarmDays['sun'] = false;
+        });
+        break;
       default:
         setState(() {
           alarmDays[target] = !alarmDays[target];
@@ -88,25 +112,29 @@ class _OnboardingState extends State<Onboarding> {
   }
 
   Widget build(BuildContext context) {
-    print(routineTitle);
-    print(alarmDays);
-    print('time');
-    print(alarmTime);
+    Map<String, String> body = {
+      'title': routineTitle,
+      'time_at': alarmTime.hour.toString() + alarmTime.minute.toString(),
+      'mon': alarmDays['mon'].toString(),
+      'tue': alarmDays['tue'].toString(),
+      'wed': alarmDays['wed'].toString(),
+      'thu': alarmDays['thu'].toString(),
+      'fri': alarmDays['fri'].toString(),
+      'sat': alarmDays['sat'].toString(),
+      'sun': alarmDays['sun'].toString()
+    };
 
     return new MaterialApp(
       title: 'Onboarding',
-      theme: ThemeData(
-        primarySwatch: Colors.teal,
-      ),
+      theme: ThemeData(),
       home: new Scaffold(
-        appBar: AppBar(
-          title: Text('Onboarding'),
-        ),
         body: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+              // height: MediaQuery.of(context).size.height,
+              padding: EdgeInsets.fromLTRB(20, 20, 0, 0),
               margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
               child: Text(
                 stepTitle[currentPage],
@@ -117,35 +145,90 @@ class _OnboardingState extends State<Onboarding> {
               ),
             ),
             Container(
-                height: 650,
+                height: MediaQuery.of(context).size.height * 0.6,
                 child: currentPage == 0
-                    ? RoutineList(setGoalName)
+                    ? RoutineList(setGoalName, routineTitle)
                     : currentPage == 1
                         ? TimePicker(setAlarmTime: setAlarmTime)
-                        : _DaysList(setAlarmDays, alarmDays)),
+                        : currentPage == 2
+                            ? _DaysList(setAlarmDays, alarmDays)
+                            : ConfirmPage(routineTitle, alarmTime, alarmDays)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.40,
-                  child: RaisedButton(
+                  height: 40,
+                  child: RawMaterialButton(
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(10.0),
+                    ),
+                    fillColor: Color.fromRGBO(5, 121, 126, 1),
                     onPressed: () {
-                      setState(() {
-                        currentPage = currentPage - 1;
-                      });
+                      if (currentPage == 0) {
+                        Navigator.of(context).pop();
+                      } else {
+                        setState(() {
+                          currentPage = currentPage - 1;
+                        });
+                      }
                     },
-                    child: Text('뒤로가기'),
+                    child: Text(
+                      '뒤로가기',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15),
+                    ),
                   ),
                 ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.40,
-                  child: RaisedButton(
+                  height: 40,
+                  child: RawMaterialButton(
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(10.0),
+                    ),
+                    fillColor: Color.fromRGBO(5, 121, 126, 1),
                     onPressed: () async {
-                      setState(() {
-                        currentPage = currentPage + 1;
-                      });
+                      if (currentPage == 3) {
+                        // 등록페이지 post 요청
+                        bool isPostSuccess = await postRoutine(body);
+                        if (isPostSuccess) {
+                          Navigator.of(context).pushNamed('/routinelist');
+                        } else {
+                          Alert(
+                                  context: context,
+                                  type: AlertType.none,
+                                  style: alertFailedStyle,
+                                  title: "등록 실패 🤔",
+                                  desc: "다시 시도해주세요")
+                              .show();
+                        }
+                      } else {
+                        if (pageInputValidator[currentPage]) {
+                          setState(() {
+                            currentPage = currentPage + 1;
+                          });
+                        } else {
+                          Alert(
+                                  context: context,
+                                  type: AlertType.none,
+                                  style: alertFailedStyle,
+                                  title: "입력해주세요 ⭐️")
+                              .show();
+                        }
+                      }
                     },
-                    child: Text('다음으로'),
+                    child: Text(
+                      '다음으로',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15),
+                    ),
                   ),
                 )
               ],
@@ -158,8 +241,9 @@ class _OnboardingState extends State<Onboarding> {
 }
 
 class RoutineList extends StatefulWidget {
-  RoutineList(this.handleState);
+  RoutineList(this.handleState, this.routineTitle);
   final Function handleState;
+  final String routineTitle;
 
   @override
   _RoutineListState createState() => _RoutineListState();
@@ -174,57 +258,66 @@ class _RoutineListState extends State<RoutineList> {
           if (!snapshot.hasData) {
             return Center(child: CircularProgressIndicator());
           } else {
-            return Container(
-                child: Column(
-              children: <Widget>[
-                Container(
-                  height: 500,
-                  child: ListView.builder(
-                      padding: const EdgeInsets.all(8),
-                      itemCount: snapshot.data.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        List<Routine> list = snapshot.data;
-                        return GestureDetector(
-                          onTap: () {
-                            widget.handleState(list[index].title);
-                            setState(() {
-                              selected = index;
-                            });
-                          },
-                          child: Container(
-                              margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                              padding: EdgeInsets.all(20),
-                              color: selected == index
-                                  ? Colors.grey[300]
-                                  : Color.fromRGBO(241, 241, 241, 50),
-                              child: Text(
-                                '${list[index].title}',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 20),
-                              )),
-                        );
-                      }),
-                ),
-                new GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selected = 100;
-                    });
-                    _displayDialog(context, widget.handleState);
-                  },
-                  child: Container(
-                    child: Text('사용자 입력',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20)),
-                    margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                    padding: EdgeInsets.all(20),
-                    color: Color.fromRGBO(241, 241, 241, 10000),
-                    height: 70,
-                    width: 350,
+            return SingleChildScrollView(
+              child: new Container(
+                  child: Column(
+                children: <Widget>[
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.45,
+                    child: ListView.builder(
+                        padding: const EdgeInsets.all(8),
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          List<Routine> list = snapshot.data;
+                          return GestureDetector(
+                            onTap: () {
+                              widget.handleState(list[index].title);
+                              setState(() {
+                                selected = index;
+                              });
+                            },
+                            child: Container(
+                                margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                padding: EdgeInsets.fromLTRB(0, 20, 20, 20),
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                        bottom: BorderSide(
+                                            color: selected == index
+                                                ? Color.fromRGBO(5, 121, 126, 1)
+                                                : Colors.grey[300]))),
+                                child: Text(
+                                  '${list[index].title}',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 20),
+                                )),
+                          );
+                        }),
                   ),
-                ),
-              ],
-            ));
+                  new GestureDetector(
+                    onTap: () {
+                      _displayDialog(context, widget.handleState);
+                      setState(() {
+                        selected = 100;
+                      });
+                    },
+                    child: Container(
+                      child: Text(
+                          selected == 100 ? widget.routineTitle : 'custom',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600, fontSize: 20)),
+                      margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                      padding: EdgeInsets.fromLTRB(8, 20, 20, 20),
+                      decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(color: Colors.grey[300]))),
+                      height: 70,
+                      width: 350,
+                    ),
+                  ),
+                ],
+              )),
+            );
           }
         });
   }
@@ -270,7 +363,7 @@ class _DaysList extends StatefulWidget {
 
 class __DaysListState extends State<_DaysList> {
   List<String> _dayslist = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
-  List<String> _shortcutList = ['weekdays', 'weekends'];
+  List<String> _shortcutList = ['weekdays', 'weekends', 'reset'];
 
   Map<String, dynamic> colorMap = {'on': Colors.grey, 'off': Colors.white};
 
@@ -288,9 +381,9 @@ class __DaysListState extends State<_DaysList> {
                             },
                             child: new Text(day),
                             shape: new CircleBorder(),
-                            elevation: 2.0,
+                            elevation: 3.0,
                             fillColor: widget.alarmDays[day] == true
-                                ? Colors.grey
+                                ? Color.fromRGBO(235, 235, 235, 1)
                                 : Colors.white,
                             padding: const EdgeInsets.all(15),
                           ),
@@ -298,21 +391,99 @@ class __DaysListState extends State<_DaysList> {
                     .toList())),
         Container(
             child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: _shortcutList
-                    .map<Widget>((shortcut) => Expanded(
-                          child: RawMaterialButton(
-                            onPressed: () {
-                              widget.setAlarmDays(shortcut);
-                            },
-                            child: new Text(shortcut),
-                            shape: new CircleBorder(),
-                            elevation: 2.0,
-                            fillColor: Colors.white,
-                            padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                    .map<Widget>((shortcut) => Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                          child: ButtonTheme(
+                            minWidth: 200,
+                            child: RawMaterialButton(
+                              onPressed: () {
+                                widget.setAlarmDays(shortcut);
+                              },
+                              child: new Text(shortcut),
+                              shape: new RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30)),
+                              fillColor: Color.fromRGBO(235, 235, 235, 1),
+                            ),
                           ),
                         ))
                     .toList())),
       ],
     );
+  }
+}
+
+class ConfirmPage extends StatelessWidget {
+  ConfirmPage(this.routineTitle, this.alarmTime, this.alarmDays);
+  final routineTitle;
+  final alarmTime;
+  final alarmDays;
+
+  @override
+  Widget build(BuildContext context) {
+    var textStyle = TextStyle(
+      color: Color(0xFFD3D3D3),
+      fontWeight: FontWeight.bold,
+      fontSize: 30,
+      decoration: TextDecoration.underline,
+    );
+    return (new Stack(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.fromLTRB(30, 0, 30, 30),
+          child: new Container(
+              padding: EdgeInsets.fromLTRB(0, 30, 30, 30),
+              child: Container(
+                child: new Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          convertDayBooltoStr(alarmDays),
+                          style: textStyle,
+                        )
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          alarmTime.hour.toString() +
+                              ":" +
+                              alarmTime.minute.toString(),
+                          style: textStyle,
+                        ),
+                        Text(
+                          ' 에',
+                          style: TextStyle(color: Colors.black, fontSize: 30),
+                        )
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      children: <Widget>[
+                        Text(routineTitle, style: textStyle),
+                        Text(
+                          ' 를/을 ',
+                          style: TextStyle(color: Colors.black, fontSize: 30),
+                        )
+                      ],
+                    ),
+                    SizedBox(height: 50),
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          '실천할거에요!',
+                          style: TextStyle(color: Colors.black, fontSize: 30),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              )),
+        )
+      ],
+    ));
   }
 }
