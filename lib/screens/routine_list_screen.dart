@@ -34,8 +34,6 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
           selectedDate = data,
           selectedDayOfWeek = DateFormat('E').format(data).toLowerCase(),
         });
-
-    print("Selected Date -> $data $selectedDayOfWeek");
   }
 
   List<DateTime> getScheduledDatetimes() {

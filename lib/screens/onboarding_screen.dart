@@ -114,7 +114,7 @@ class _OnboardingState extends State<Onboarding> {
   Widget build(BuildContext context) {
     Map<String, String> body = {
       'title': routineTitle,
-      'time_at': alarmTime.hour.toString(),
+      'time_at': alarmTime.hour.toString() + alarmTime.minute.toString(),
       'mon': alarmDays['mon'].toString(),
       'tue': alarmDays['tue'].toString(),
       'wed': alarmDays['wed'].toString(),
@@ -133,8 +133,9 @@ class _OnboardingState extends State<Onboarding> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              padding: EdgeInsets.fromLTRB(20, 70, 0, 0),
-              margin: EdgeInsets.fromLTRB(0, 20, 0, 20),
+              // height: MediaQuery.of(context).size.height,
+              padding: EdgeInsets.fromLTRB(20, 20, 0, 0),
+              margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
               child: Text(
                 stepTitle[currentPage],
                 style: TextStyle(
@@ -276,7 +277,7 @@ class _RoutineListState extends State<RoutineList> {
                               });
                             },
                             child: Container(
-                                margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                                margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
                                 padding: EdgeInsets.fromLTRB(0, 20, 20, 20),
                                 decoration: BoxDecoration(
                                     border: Border(
@@ -432,7 +433,7 @@ class ConfirmPage extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(30, 0, 30, 30),
           child: new Container(
-              padding: EdgeInsets.fromLTRB(0, 60, 30, 30),
+              padding: EdgeInsets.fromLTRB(0, 30, 30, 30),
               child: Container(
                 child: new Column(
                   children: <Widget>[
@@ -486,24 +487,3 @@ class ConfirmPage extends StatelessWidget {
     ));
   }
 }
-
-// class TimePicker extends StatelessWidget {
-//   // super constructor
-//   TimePicker({Key key, this.setAlarmTime}) : super(key: key);
-//   final Function(DateTime) setAlarmTime;
-
-//   // constructor :
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       height: MediaQuery.of(context).size.height / 4,
-//       child: CupertinoDatePicker(
-//           mode: CupertinoDatePickerMode.time,
-//           use24hFormat: false,
-//           onDateTimeChanged: (DateTime changedTime) {
-//             setAlarmTime(changedTime);
-//           }),
-//     );
-//   }
-// }
