@@ -1,3 +1,4 @@
+import 'package:clapme_client/main.dart';
 import 'package:clapme_client/screens/onboarding_screen.dart';
 import 'package:clapme_client/screens/login_screen.dart';
 import 'package:flutter/material.dart';

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:clapme_client/screens/home_screen.dart';
 import 'package:clapme_client/screens/login_screen.dart';
@@ -5,6 +7,9 @@ import 'package:clapme_client/screens/signup_screen.dart';
 import 'package:clapme_client/screens/onboarding_screen.dart';
 import 'package:clapme_client/screens/routine_list_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:clapme_client/components/nofi_component.dart';
 
 class Auth {
   Future<bool> isLogged() async {
@@ -21,6 +26,15 @@ class Auth {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  /* setLocalPush(); */
+
+  // notification setting
+  var initAndroidSetting = AndroidInitializationSettings('app_icon');
+  var initIosSetting = IOSInitializationSettings();
+  var initSetting = InitializationSettings(initAndroidSetting, initIosSetting);
+  await FlutterLocalNotificationsPlugin().initialize(initSetting);
+
+  // auth token check
   final Auth _auth = Auth();
   final bool isLogged = await _auth.isLogged();
 
