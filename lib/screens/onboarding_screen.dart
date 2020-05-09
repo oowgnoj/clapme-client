@@ -32,26 +32,10 @@ class Onboarding extends StatefulWidget {
 
 class _OnboardingState extends State<Onboarding> {
   int currentPage = 0;
-  String routineTitle;
+  String routineTitle = 'custom';
   DateTime alarmTime = DateTime.now();
 
   List pageInputValidator = [false, false, false, false];
-
-  // bool validatePage() {
-  //   switch (currentPage) {
-  //     case 0:
-  //       if (routineTitle == '') {
-  //         Alert(
-  //                 context: context,
-  //                 type: AlertType.none,
-  //                 style: alertFailedStyle,
-  //                 title: "routine을 입력해주세요 🤔",
-  //                 desc: "다시 시도해주세요")
-  //             .show();
-  //         return false;
-  //       }
-  //   }
-  // }
 
   Map<String, dynamic> alarmDays = {
     'mon': false,
@@ -145,6 +129,7 @@ class _OnboardingState extends State<Onboarding> {
       theme: ThemeData(),
       home: new Scaffold(
         body: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
@@ -159,7 +144,7 @@ class _OnboardingState extends State<Onboarding> {
               ),
             ),
             Container(
-                height: MediaQuery.of(context).size.height * 0.70,
+                height: MediaQuery.of(context).size.height * 0.6,
                 child: currentPage == 0
                     ? RoutineList(setGoalName, routineTitle)
                     : currentPage == 1
@@ -231,8 +216,7 @@ class _OnboardingState extends State<Onboarding> {
                                   context: context,
                                   type: AlertType.none,
                                   style: alertFailedStyle,
-                                  title: "입력해주세요 ⭐️",
-                                  desc: "다시 시도해주세요")
+                                  title: "입력해주세요 ⭐️")
                               .show();
                         }
                       }
@@ -273,63 +257,66 @@ class _RoutineListState extends State<RoutineList> {
           if (!snapshot.hasData) {
             return Center(child: CircularProgressIndicator());
           } else {
-            return Container(
-                child: Column(
-              children: <Widget>[
-                Container(
-                  height: 500,
-                  child: ListView.builder(
-                      padding: const EdgeInsets.all(8),
-                      itemCount: snapshot.data.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        List<Routine> list = snapshot.data;
-                        return GestureDetector(
-                          onTap: () {
-                            widget.handleState(list[index].title);
-                            setState(() {
-                              selected = index;
-                            });
-                          },
-                          child: Container(
-                              margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                              padding: EdgeInsets.fromLTRB(0, 20, 20, 20),
-                              decoration: BoxDecoration(
-                                  border: Border(
-                                      bottom: BorderSide(
-                                          color: selected == index
-                                              ? Color.fromRGBO(5, 121, 126, 1)
-                                              : Colors.grey[300]))),
-                              child: Text(
-                                '${list[index].title}',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600, fontSize: 20),
-                              )),
-                        );
-                      }),
-                ),
-                new GestureDetector(
-                  onTap: () {
-                    _displayDialog(context, widget.handleState);
-                    setState(() {
-                      selected = 100;
-                    });
-                  },
-                  child: Container(
-                    child: Text(
-                        selected != 100 ? 'custom' : widget.routineTitle,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 20)),
-                    margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                    padding: EdgeInsets.fromLTRB(0, 20, 20, 20),
-                    decoration: BoxDecoration(
-                        border: Border(
-                            bottom: BorderSide(color: Colors.grey[300]))),
-                    height: 70,
-                    width: 350,
+            return SingleChildScrollView(
+              child: new Container(
+                  child: Column(
+                children: <Widget>[
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.45,
+                    child: ListView.builder(
+                        padding: const EdgeInsets.all(8),
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          List<Routine> list = snapshot.data;
+                          return GestureDetector(
+                            onTap: () {
+                              widget.handleState(list[index].title);
+                              setState(() {
+                                selected = index;
+                              });
+                            },
+                            child: Container(
+                                margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                                padding: EdgeInsets.fromLTRB(0, 20, 20, 20),
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                        bottom: BorderSide(
+                                            color: selected == index
+                                                ? Color.fromRGBO(5, 121, 126, 1)
+                                                : Colors.grey[300]))),
+                                child: Text(
+                                  '${list[index].title}',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 20),
+                                )),
+                          );
+                        }),
                   ),
-                ),
-              ],
-            ));
+                  new GestureDetector(
+                    onTap: () {
+                      _displayDialog(context, widget.handleState);
+                      setState(() {
+                        selected = 100;
+                      });
+                    },
+                    child: Container(
+                      child: Text(
+                          selected == 100 ? widget.routineTitle : 'custom',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600, fontSize: 20)),
+                      margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                      padding: EdgeInsets.fromLTRB(8, 20, 20, 20),
+                      decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(color: Colors.grey[300]))),
+                      height: 70,
+                      width: 350,
+                    ),
+                  ),
+                ],
+              )),
+            );
           }
         });
   }
