@@ -6,6 +6,7 @@ import 'package:clapme_client/screens/login_screen.dart';
 import 'package:clapme_client/screens/signup_screen.dart';
 import 'package:clapme_client/screens/onboarding_screen.dart';
 import 'package:clapme_client/screens/routine_list_screen.dart';
+import 'package:clapme_client/screens/routine_list_weekly_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -46,6 +47,7 @@ void main() async {
       '/login': (BuildContext context) => new Login(),
       '/onboarding': (BuildContext context) => new Onboarding(),
       '/routinelist': (BuildContext context) => new RoutineListScreen(),
+      '/routinelistWeekly': (BuildContext context) => new RoutineListWeekly(),
     },
     initialRoute: isLogged ? '/routinelist' : '/',
   ));

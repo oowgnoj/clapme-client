@@ -38,3 +38,18 @@ Future<List<Routine>> fetchDayRoutine(dayOfWeek) async {
     return [temp];
   }
 }
+
+// 유저의 모든 루틴 get
+Future<List<Routine>> fetchUserRoutine() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String accessToken = prefs.getString('accessToken');
+
+  final response = await http
+      .get('$server/routine', headers: {"Authorization": accessToken});
+
+  List<Routine> routines = (json.decode(response.body) as List)
+      .map((i) => new Routine.fromJson(i))
+      .toList();
+
+  return routines;
+}
