@@ -200,7 +200,7 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
           Padding(
             padding: const EdgeInsets.fromLTRB(30, 0, 0, 0),
             child: FloatingActionButton(
-              heroTag: "btn1",
+              heroTag: "weeklySchedule",
               onPressed: () {
                 Navigator.push(
                     context,
@@ -217,7 +217,7 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
             ),
           ),
           FloatingActionButton(
-            heroTag: "btn2",
+            heroTag: "addRoutine",
             onPressed: () {
               Navigator.of(context).pushNamed('/onboarding');
             },
