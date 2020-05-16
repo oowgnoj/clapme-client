@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:clapme_client/components/daypicker_component.dart';
-import 'package:clapme_client/models/model.dart';
-import 'package:clapme_client/utils/api.dart';
-import 'package:clapme_client/models/model.dart';
-import 'package:clapme_client/utils/common_func.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+
+import 'package:clapme_client/models/routine_model.dart';
+import 'package:clapme_client/services/routine_service.dart';
+import 'package:clapme_client/utils/common_func.dart';
 import 'package:clapme_client/utils/alert_style.dart';
 
 const mainGrey = Color(0xffF2F2F2);
@@ -148,9 +147,9 @@ class _OnboardingState extends State<Onboarding> {
                 height: MediaQuery.of(context).size.height * 0.6,
                 child: currentPage == 0
                     ? RoutineList(setGoalName, routineTitle)
-                    : currentPage == 1
+                    : currentPage == 1 // 시간 설정
                         ? TimePicker(setAlarmTime: setAlarmTime)
-                        : currentPage == 2
+                        : currentPage == 2 // 요일 설정
                             ? _DaysList(setAlarmDays, alarmDays)
                             : ConfirmPage(routineTitle, alarmTime, alarmDays)),
             Row(
@@ -193,8 +192,8 @@ class _OnboardingState extends State<Onboarding> {
                     ),
                     fillColor: Color.fromRGBO(5, 121, 126, 1),
                     onPressed: () async {
+                      // routine post page
                       if (currentPage == 3) {
-                        // 등록페이지 post 요청
                         bool isPostSuccess = await postRoutine(body);
                         if (isPostSuccess) {
                           Navigator.of(context).pushNamed('/routinelist');
@@ -268,7 +267,7 @@ class _RoutineListState extends State<RoutineList> {
                         padding: const EdgeInsets.all(8),
                         itemCount: snapshot.data.length,
                         itemBuilder: (BuildContext context, int index) {
-                          List<Routine> list = snapshot.data;
+                          List<RoutineRecommend> list = snapshot.data;
                           return GestureDetector(
                             onTap: () {
                               widget.handleState(list[index].title);
@@ -379,7 +378,8 @@ class __DaysListState extends State<_DaysList> {
                             onPressed: () {
                               widget.setAlarmDays(day);
                             },
-                            child: new Text(day),
+                            child:
+                                new Text(day, style: TextStyle(fontSize: 11)),
                             shape: new CircleBorder(),
                             elevation: 3.0,
                             fillColor: widget.alarmDays[day] == true
@@ -389,6 +389,8 @@ class __DaysListState extends State<_DaysList> {
                           ),
                         ))
                     .toList())),
+
+        // 평일, 주말 등 단축키
         Container(
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -401,7 +403,8 @@ class __DaysListState extends State<_DaysList> {
                               onPressed: () {
                                 widget.setAlarmDays(shortcut);
                               },
-                              child: new Text(shortcut),
+                              child: new Text(shortcut,
+                                  style: TextStyle(fontSize: 12)),
                               shape: new RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30)),
                               fillColor: Color.fromRGBO(235, 235, 235, 1),

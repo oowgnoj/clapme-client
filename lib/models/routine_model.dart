@@ -82,3 +82,17 @@ class Routine {
     return weekdays;
   }
 }
+
+// single recommended routine
+class RoutineRecommend {
+  int id;
+  String title;
+  RoutineRecommend({this.id, this.title});
+
+  factory RoutineRecommend.fromJson(Map<String, dynamic> json) {
+    return new RoutineRecommend(
+      id: json['id'],
+      title: json['title'],
+    );
+  }
+}
