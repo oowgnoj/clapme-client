@@ -123,117 +123,113 @@ class _OnboardingState extends State<Onboarding> {
       'sun': alarmDays['sun'].toString()
     };
 
-    return new MaterialApp(
-      title: 'Onboarding',
-      theme: ThemeData(),
-      home: new Scaffold(
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              // height: MediaQuery.of(context).size.height,
-              padding: EdgeInsets.fromLTRB(20, 20, 0, 0),
-              margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
-              child: Text(
-                stepTitle[currentPage],
-                style: TextStyle(
-                    color: Colors.grey[500],
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold),
-              ),
+    return new Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            // height: MediaQuery.of(context).size.height,
+            padding: EdgeInsets.fromLTRB(20, 20, 0, 0),
+            margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+            child: Text(
+              stepTitle[currentPage],
+              style: TextStyle(
+                  color: Colors.grey[500],
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold),
             ),
-            Container(
-                height: MediaQuery.of(context).size.height * 0.6,
-                child: currentPage == 0
-                    ? RoutineList(setGoalName, routineTitle)
-                    : currentPage == 1 // 시간 설정
-                        ? TimePicker(setAlarmTime: setAlarmTime)
-                        : currentPage == 2 // 요일 설정
-                            ? _DaysList(setAlarmDays, alarmDays)
-                            : ConfirmPage(routineTitle, alarmTime, alarmDays)),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.40,
-                  height: 40,
-                  child: RawMaterialButton(
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(10.0),
-                    ),
-                    fillColor: Color.fromRGBO(5, 121, 126, 1),
-                    onPressed: () {
-                      if (currentPage == 0) {
-                        Navigator.of(context).pop();
-                      } else {
-                        setState(() {
-                          currentPage = currentPage - 1;
-                        });
-                      }
-                    },
-                    child: Text(
-                      '뒤로가기',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15),
-                    ),
+          ),
+          Container(
+              height: MediaQuery.of(context).size.height * 0.6,
+              child: currentPage == 0
+                  ? RoutineList(setGoalName, routineTitle)
+                  : currentPage == 1 // 시간 설정
+                      ? TimePicker(setAlarmTime: setAlarmTime)
+                      : currentPage == 2 // 요일 설정
+                          ? _DaysList(setAlarmDays, alarmDays)
+                          : ConfirmPage(routineTitle, alarmTime, alarmDays)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.40,
+                height: 40,
+                child: RawMaterialButton(
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(10.0),
+                  ),
+                  fillColor: Color.fromRGBO(5, 121, 126, 1),
+                  onPressed: () {
+                    if (currentPage == 0) {
+                      Navigator.of(context).pop();
+                    } else {
+                      setState(() {
+                        currentPage = currentPage - 1;
+                      });
+                    }
+                  },
+                  child: Text(
+                    '뒤로가기',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15),
                   ),
                 ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.40,
-                  height: 40,
-                  child: RawMaterialButton(
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(10.0),
-                    ),
-                    fillColor: Color.fromRGBO(5, 121, 126, 1),
-                    onPressed: () async {
-                      // routine post page
-                      if (currentPage == 3) {
-                        bool isPostSuccess = await postRoutine(body);
-                        if (isPostSuccess) {
-                          Navigator.of(context).pushNamed('/routinelist');
-                        } else {
-                          Alert(
-                                  context: context,
-                                  type: AlertType.none,
-                                  style: alertFailedStyle,
-                                  title: "등록 실패 🤔",
-                                  desc: "다시 시도해주세요")
-                              .show();
-                        }
-                      } else {
-                        if (pageInputValidator[currentPage]) {
-                          setState(() {
-                            currentPage = currentPage + 1;
-                          });
-                        } else {
-                          Alert(
-                                  context: context,
-                                  type: AlertType.none,
-                                  style: alertFailedStyle,
-                                  title: "입력해주세요 ⭐️")
-                              .show();
-                        }
-                      }
-                    },
-                    child: Text(
-                      '다음으로',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15),
-                    ),
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.40,
+                height: 40,
+                child: RawMaterialButton(
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(10.0),
                   ),
-                )
-              ],
-            ),
-          ],
-        ),
+                  fillColor: Color.fromRGBO(5, 121, 126, 1),
+                  onPressed: () async {
+                    // routine post page
+                    if (currentPage == 3) {
+                      bool isPostSuccess = await postRoutine(body);
+                      if (isPostSuccess) {
+                        Navigator.of(context).pushNamed('/routinelist');
+                      } else {
+                        Alert(
+                                context: context,
+                                type: AlertType.none,
+                                style: alertFailedStyle,
+                                title: "등록 실패 🤔",
+                                desc: "다시 시도해주세요")
+                            .show();
+                      }
+                    } else {
+                      if (pageInputValidator[currentPage]) {
+                        setState(() {
+                          currentPage = currentPage + 1;
+                        });
+                      } else {
+                        Alert(
+                                context: context,
+                                type: AlertType.none,
+                                style: alertFailedStyle,
+                                title: "입력해주세요 ⭐️")
+                            .show();
+                      }
+                    }
+                  },
+                  child: Text(
+                    '다음으로',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ],
       ),
     );
   }

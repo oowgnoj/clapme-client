@@ -44,7 +44,6 @@ Future<List<Routine>> fetchDayRoutine(dayOfWeek) async {
 Future<Object> postRoutine(body) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String accessToken = prefs.getString('accessToken');
-
   var headers = <String, String>{
     'Content-Type': 'application/json; charset=UTF-8',
     'Authorization': accessToken
