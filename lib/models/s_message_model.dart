@@ -1,7 +1,9 @@
-class Message{
-  final String text;
-  final int senderID;
-  final int receiverID;
+import 'package:clapme_client/models/user_model.dart';
 
-  Message(this.text,this.senderID,this.receiverID);
+class Message{
+  final User user_info;
+  final int goal_id;
+  final String comment;
+
+  Message(this.user_info,this.goal_id,this.comment);
 }

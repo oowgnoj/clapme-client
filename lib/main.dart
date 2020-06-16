@@ -70,7 +70,7 @@ class _MyAppState extends State<MyApp> {
             '/signup': (BuildContext context) => new Signup(),
             '/login': (BuildContext context) => new Login(),
             '/onboarding': (BuildContext context) => new Onboarding(),
-            '/routinelist': (BuildContext context) => new AllGoals(),
+            '/routinelist': (BuildContext context) => new AllGoals(title: 'socket'),
           },
           initialRoute: widget.isLogged ? '/routinelist' : '/',
           home: widget.isLogged

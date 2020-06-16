@@ -5,6 +5,7 @@ import 'dart:convert';
 
 import './s_goal_model.dart';
 import './s_message_model.dart';
+import './user_model.dart';
 
 class ThreadModel extends Model {
   List<Goal> Goals = [
@@ -20,20 +21,30 @@ class ThreadModel extends Model {
   List<Message> messages = List<Message>();
   SocketIO socketIO;
 
+  User tmpUser = User(email: 'hello', password: '12345', username: 'hello', image: '', status: '');
+
   void init() {
     currentGoal = Goals[0];
     friendList =
         Goals.where((Goal) => Goal.goalId != currentGoal.goalId).toList();
 
+    // connection
     socketIO = SocketIOManager().createSocketIO(
-        'http://10.0.2.2:8000', '/',
-        query: 'goalId=${currentGoal.goalId}');
+        'http://15.164.96.238:5000', '/goal');
     socketIO.init();
 
-    socketIO.subscribe('receive_message', (jsonData) {
+    socketIO.subscribe('connect', () {
+      socketIO.sendMessage('joined', json.encode({
+        'goal_id':  11
+      }));
+    });
+
+    socketIO.subscribe('comment', (jsonData) {
       Map<String, dynamic> data = json.decode(jsonData);
+
+      //user_info 는 user 객체
       messages.add(Message(
-          data['content'], data['sendergoalId'], data['receivergoalId']));
+          data['user_info'], data['goal_id'], data['comment']));
       notifyListeners();
     });
 
@@ -41,13 +52,13 @@ class ThreadModel extends Model {
   }
 
   void sendMessage(String text, int goalId) {
-    messages.add(Message(text, currentGoal.goalId, goalId));
+    messages.add(Message(tmpUser, currentGoal.goalId, text));
     socketIO.sendMessage(
-      'send_message',
+      'comment',
       json.encode({
-        'receivergoalId': currentGoal.goalId,
-        'sendergoalId': currentGoal.goalId,
-        'content': text,
+        'user_id': 2, // tmpUser.user_id
+        'goal_id': 11,
+        'comment': text,
       }),
     );
     notifyListeners();
@@ -55,7 +66,7 @@ class ThreadModel extends Model {
 
   List<Message> getMessagesForGoalId(int goalId) {
     return messages
-        .where((msg) => msg.senderID == goalId || msg.receiverID == goalId)
+        .where((msg) => true)
         .toList();
   }
 }

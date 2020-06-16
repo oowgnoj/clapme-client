@@ -1,4 +1,5 @@
 class User {
+  // user_id 그 DB 상에서 숫자도 받아와서 처리
   final String email;
   final String password;
   final String username;

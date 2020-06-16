@@ -284,12 +284,9 @@ class _CommentState extends State<Comment> {
 
   Widget buildSingleMessage(Message message) {
     return Container(
-      alignment: message.senderID == widget.friend.goalId
-          ? Alignment.centerLeft
-          : Alignment.centerRight,
       padding: EdgeInsets.all(10.0),
       margin: EdgeInsets.all(10.0),
-      child: Text(message.text),
+      child: Text(message.comment),
     );
   }
 
