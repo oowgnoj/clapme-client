@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
-
 class AllGoals extends StatefulWidget {
   AllGoals({Key key, this.title}) : super(key: key);
 
@@ -23,8 +22,10 @@ class AllGoals extends StatefulWidget {
 class _AllGoalsState extends State<AllGoals> {
   int _counter = 0;
   var mTextMessageController = new TextEditingController();
-  IO.Socket socketIO;
-  IO.Socket socketIO02;
+  IO.Socket socket = IO.io('http://0.0.0.0:5000/goal', <String, dynamic>{
+    'transports': ['websocket'],
+    'autoConnect': true,
+  });
 
   @override
   void initState() {
@@ -32,35 +33,17 @@ class _AllGoalsState extends State<AllGoals> {
   }
 
   _connectSocket01() {
-    //update your domain before using
-    /*socketIO = new SocketIO("http://127.0.0.1:3000", "/chat",
-        query: "userId=21031", socketStatusCallback: _socketStatus);*/
-
-    print('눌렸니?');
-
-
-    socketIO = IO.io('http://15.164.96.238:5000/goal');
-    socketIO.connect();
-
-    socketIO.on('status', (data) => print(data));
-    socketIO.on('comment', (data) => print(data));
+    // 소켓 연결
+    socket.connect();
+    socket.emit('joined', {'name': "ganadara", "goal_id": 11});
+    socket.on('comment', (data) => print(data));
+    // socket.on('disconnect', (_) => print('disconnect'));
+    // socket.on('fromServer', (_) => print(_));
   }
 
   _connectSocket02() {
-    String jsonData =
-        '{"user_id": 2, "goal_id": 11, "comment": "hello clapme!"}';
-
-    socketIO.emit('comment', jsonData);
-//    socketIO02 = SocketIOManager().createSocketIO("http://127.0.0.1:3000", "/map", query: "userId=21031", socketStatusCallback: _socketStatus02);
-//
-//    //call init socket before doing anything
-//    socketIO02.init();
-//
-//    //subscribe event
-//    socketIO02.subscribe("socket_info", _onSocketInfo02);
-//
-//    //connect socket
-//    socketIO02.connect();
+    socket.emit(
+        'comment', {"user_id": 2, "goal_id": 11, "comment": "hello clapme!"});
   }
 
   _onSocketInfo(dynamic data) {
@@ -80,41 +63,41 @@ class _AllGoalsState extends State<AllGoals> {
   }
 
   _subscribes() {
-    if (socketIO != null) {
-      socketIO.emit('joined', '{"name": "ganadara", "goal_id": 11}');
-//      socketIO.subscribe("comment", _onReceiveChatMessage);
+    if (socket != null) {
+      socket.emit('joined', '{"name": "ganadara", "goal_id": 11}');
+//      socket.subscribe("comment", _onReceiveChatMessage);
     }
   }
 
   _unSubscribes() {
-    if (socketIO != null) {
+    if (socket != null) {
 //      socketIO.subscribe("status", _onReceiveChatMessage);
 //      socketIO.unSubscribe("chat_direct", _onReceiveChatMessage);
     }
   }
 
   _reconnectSocket() {
-    if (socketIO == null) {
+    if (socket == null) {
       _connectSocket01();
     } else {
-      socketIO.connect();
+      socket.connect();
     }
   }
 
   _disconnectSocket() {
-    if (socketIO != null) {
-      socketIO.disconnect();
+    if (socket != null) {
+      socket.disconnect();
     }
   }
 
   _destroySocket() {
-    if (socketIO != null) {
+    if (socket != null) {
 //      SocketIOManager().destroySocket(socketIO);
     }
   }
 
   void _sendChatMessage(String msg) async {
-    if (socketIO != null) {
+    if (socket != null) {
       String jsonData =
           '{"user_id": 2, "goal_id": 11, "comment": "hello clapme!"}';
 //      String jsonData =
@@ -180,19 +163,18 @@ class _AllGoalsState extends State<AllGoals> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             new RaisedButton(
-              child:
-              const Text('CONNECT  SOCKET 01', style: TextStyle(color: Colors.white)),
+              child: const Text('connect to socket',
+                  style: TextStyle(color: Colors.white)),
               color: Theme.of(context).accentColor,
               elevation: 0.0,
               splashColor: Colors.blueGrey,
               onPressed: () {
                 _connectSocket01();
-//                _sendChatMessage(mTextMessageController.text);
               },
             ),
             new RaisedButton(
-              child:
-              const Text('CONNECT SOCKET 02', style: TextStyle(color: Colors.white)),
+              child: const Text('send Text',
+                  style: TextStyle(color: Colors.white)),
               color: Theme.of(context).accentColor,
               elevation: 0.0,
               splashColor: Colors.blueGrey,
@@ -202,7 +184,8 @@ class _AllGoalsState extends State<AllGoals> {
               },
             ),
             new RaisedButton(
-              child: const Text('SEND MESSAGE', style: TextStyle(color: Colors.white)),
+              child: const Text('SEND MESSAGE',
+                  style: TextStyle(color: Colors.white)),
               color: Theme.of(context).accentColor,
               elevation: 0.0,
               splashColor: Colors.blueGrey,
@@ -257,7 +240,7 @@ class _AllGoalsState extends State<AllGoals> {
             ),
             new RaisedButton(
               child:
-              const Text('DESTROY', style: TextStyle(color: Colors.white)),
+                  const Text('DESTROY', style: TextStyle(color: Colors.white)),
               color: Theme.of(context).accentColor,
               elevation: 0.0,
               splashColor: Colors.blueGrey,
@@ -277,8 +260,6 @@ class _AllGoalsState extends State<AllGoals> {
     );
   }
 }
-
-
 
 //import 'package:flutter/material.dart';
 //import 'package:scoped_model/scoped_model.dart';
