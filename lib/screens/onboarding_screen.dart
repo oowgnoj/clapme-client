@@ -6,8 +6,8 @@ import 'package:clapme_client/models/routine_model.dart';
 import 'package:clapme_client/services/routine_service.dart';
 import 'package:clapme_client/utils/common_func.dart';
 import 'package:clapme_client/utils/alert_style.dart';
+import 'package:clapme_client/theme/color_theme.dart';
 
-const mainGrey = Color(0xffF2F2F2);
 final List<String> stepTitle = <String>[
   '목표 달성에 \n힘이 되어 드릴게요',
   '시간은 언제가\n 좋을까요',
@@ -123,21 +123,89 @@ class _OnboardingState extends State<Onboarding> {
       'sun': alarmDays['sun'].toString()
     };
 
+    var ButtonPrevious = SizedBox(
+      width: MediaQuery.of(context).size.width * 0.40,
+      height: 40,
+      child: RawMaterialButton(
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: new BorderRadius.circular(10.0),
+        ),
+        fillColor: StrongGreen,
+        onPressed: () {
+          if (currentPage == 0) {
+            Navigator.of(context).pop();
+          } else {
+            setState(() {
+              currentPage = currentPage - 1;
+            });
+          }
+        },
+        child: Text(
+          '뒤로가기',
+          style: TextStyle(
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
+        ),
+      ),
+    );
+    var ButtonNext = SizedBox(
+      width: MediaQuery.of(context).size.width * 0.40,
+      height: 40,
+      child: RawMaterialButton(
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: new BorderRadius.circular(10.0),
+        ),
+        fillColor: StrongGreen,
+        onPressed: () async {
+          // routine post page
+          if (currentPage == 3) {
+            bool isPostSuccess = await postRoutine(body);
+            if (isPostSuccess) {
+              Navigator.of(context).pushNamed('/routinelist');
+            } else {
+              Alert(
+                      context: context,
+                      type: AlertType.none,
+                      style: alertFailedStyle,
+                      title: "등록 실패 🤔",
+                      desc: "다시 시도해주세요")
+                  .show();
+            }
+          } else {
+            if (pageInputValidator[currentPage]) {
+              setState(() {
+                currentPage = currentPage + 1;
+              });
+            } else {
+              Alert(
+                      context: context,
+                      type: AlertType.none,
+                      style: alertFailedStyle,
+                      title: "입력해주세요 ⭐️")
+                  .show();
+            }
+          }
+        },
+        child: Text(
+          '다음으로',
+          style: TextStyle(
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
+        ),
+      ),
+    );
     return new Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            // height: MediaQuery.of(context).size.height,
             padding: EdgeInsets.fromLTRB(20, 20, 0, 0),
             margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
             child: Text(
               stepTitle[currentPage],
               style: TextStyle(
-                  color: Colors.grey[500],
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold),
+                  color: MediumGrey, fontSize: 25, fontWeight: FontWeight.bold),
             ),
           ),
           Container(
@@ -151,83 +219,7 @@ class _OnboardingState extends State<Onboarding> {
                           : ConfirmPage(routineTitle, alarmTime, alarmDays)),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.40,
-                height: 40,
-                child: RawMaterialButton(
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(10.0),
-                  ),
-                  fillColor: Color.fromRGBO(5, 121, 126, 1),
-                  onPressed: () {
-                    if (currentPage == 0) {
-                      Navigator.of(context).pop();
-                    } else {
-                      setState(() {
-                        currentPage = currentPage - 1;
-                      });
-                    }
-                  },
-                  child: Text(
-                    '뒤로가기',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15),
-                  ),
-                ),
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.40,
-                height: 40,
-                child: RawMaterialButton(
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(10.0),
-                  ),
-                  fillColor: Color.fromRGBO(5, 121, 126, 1),
-                  onPressed: () async {
-                    // routine post page
-                    if (currentPage == 3) {
-                      bool isPostSuccess = await postRoutine(body);
-                      if (isPostSuccess) {
-                        Navigator.of(context).pushNamed('/routinelist');
-                      } else {
-                        Alert(
-                                context: context,
-                                type: AlertType.none,
-                                style: alertFailedStyle,
-                                title: "등록 실패 🤔",
-                                desc: "다시 시도해주세요")
-                            .show();
-                      }
-                    } else {
-                      if (pageInputValidator[currentPage]) {
-                        setState(() {
-                          currentPage = currentPage + 1;
-                        });
-                      } else {
-                        Alert(
-                                context: context,
-                                type: AlertType.none,
-                                style: alertFailedStyle,
-                                title: "입력해주세요 ⭐️")
-                            .show();
-                      }
-                    }
-                  },
-                  child: Text(
-                    '다음으로',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15),
-                  ),
-                ),
-              )
-            ],
+            children: <Widget>[ButtonPrevious, ButtonNext],
           ),
         ],
       ),
@@ -278,12 +270,12 @@ class _RoutineListState extends State<RoutineList> {
                                     border: Border(
                                         bottom: BorderSide(
                                             color: selected == index
-                                                ? Color.fromRGBO(5, 121, 126, 1)
-                                                : Colors.grey[300]))),
+                                                ? StrongGreen
+                                                : LightGrey))),
                                 child: Text(
                                   '${list[index].title}',
                                   style: TextStyle(
-                                      fontWeight: FontWeight.w600,
+                                      fontWeight: FontWeight.bold,
                                       fontSize: 20),
                                 )),
                           );
@@ -300,12 +292,11 @@ class _RoutineListState extends State<RoutineList> {
                       child: Text(
                           selected == 100 ? widget.routineTitle : 'custom',
                           style: TextStyle(
-                              fontWeight: FontWeight.w600, fontSize: 20)),
+                              fontWeight: FontWeight.bold, fontSize: 20)),
                       margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
                       padding: EdgeInsets.fromLTRB(8, 20, 20, 20),
                       decoration: BoxDecoration(
-                          border: Border(
-                              bottom: BorderSide(color: Colors.grey[300]))),
+                          border: Border(bottom: BorderSide(color: LightGrey))),
                       height: 70,
                       width: 350,
                     ),
@@ -360,7 +351,7 @@ class __DaysListState extends State<_DaysList> {
   List<String> _dayslist = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
   List<String> _shortcutList = ['weekdays', 'weekends', 'reset'];
 
-  Map<String, dynamic> colorMap = {'on': Colors.grey, 'off': Colors.white};
+  Map<String, dynamic> colorMap = {'on': LightGrey, 'off': Colors.white};
 
   Widget build(BuildContext context) {
     return Column(
@@ -379,7 +370,7 @@ class __DaysListState extends State<_DaysList> {
                             shape: new CircleBorder(),
                             elevation: 3.0,
                             fillColor: widget.alarmDays[day] == true
-                                ? Color.fromRGBO(235, 235, 235, 1)
+                                ? LightGrey
                                 : Colors.white,
                             padding: const EdgeInsets.all(15),
                           ),
@@ -403,7 +394,7 @@ class __DaysListState extends State<_DaysList> {
                                   style: TextStyle(fontSize: 12)),
                               shape: new RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30)),
-                              fillColor: Color.fromRGBO(235, 235, 235, 1),
+                              fillColor: LightGrey,
                             ),
                           ),
                         ))

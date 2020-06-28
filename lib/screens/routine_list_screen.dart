@@ -5,6 +5,7 @@ import 'package:clapme_client/models/schedule_model.dart';
 import 'package:clapme_client/services/routine_service.dart';
 import 'package:intl/intl.dart';
 import 'package:clapme_client/screens/routine_list_weekly_screen.dart';
+import 'package:clapme_client/theme/color_theme.dart';
 
 class RoutineListScreen extends StatefulWidget {
   @override
@@ -209,21 +210,17 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
                             RoutineListWeekly(schedule: weeklySchedule)));
                 // Navigator.of(context).pushNamed('/routinelistWeekly');
               },
-              child: Icon(
-                Icons.check,
-                color: Color(0xff7ACBAA),
-              ),
+              child: Icon(Icons.check, color: Clapme_green),
               backgroundColor: Colors.white,
             ),
           ),
           FloatingActionButton(
-            heroTag: "addRoutine",
-            onPressed: () {
-              Navigator.of(context).pushNamed('/onboarding');
-            },
-            child: Icon(Icons.add),
-            backgroundColor: Color(0xff7ACBAA),
-          ),
+              heroTag: "addRoutine",
+              onPressed: () {
+                Navigator.of(context).pushNamed('/onboarding');
+              },
+              child: Icon(Icons.add),
+              backgroundColor: Clapme_green),
         ],
       ),
     );

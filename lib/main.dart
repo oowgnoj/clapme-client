@@ -11,6 +11,7 @@ import 'package:clapme_client/screens/routine_list_weekly_screen.dart';
 import 'package:clapme_client/screens/goal_detail_screen.dart';
 import 'package:clapme_client/screens/mypage_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:clapme_client/theme/color_theme.dart';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:clapme_client/components/nofi_component.dart';
@@ -61,11 +62,11 @@ class _MyAppState extends State<MyApp> {
           '/signup': (BuildContext context) => new Signup(),
           '/login': (BuildContext context) => new Login(),
           '/onboarding': (BuildContext context) => new Onboarding(),
-          // '/routinelist': (BuildContext context) => new RoutineListScreen(),
-          '/routinelist': (BuildContext context) => new GoalList(),
+          '/routinelist': (BuildContext context) => new RoutineListScreen(),
+          // '/routinelist': (BuildContext context) => new GoalList(),
           '/goaldetail': (BuildContext context) => new GoalDetail(),
         },
-        initialRoute: widget.isLogged ? '/routinelist' : '/',
+        initialRoute: widget.isLogged ? '/' : '/login',
         home: widget.isLogged
             ? DefaultTabController(
                 length: 3,
@@ -76,11 +77,11 @@ class _MyAppState extends State<MyApp> {
                       Tab(icon: Icon(Icons.flag)),
                       Tab(icon: Icon(Icons.account_box)),
                     ],
-                    labelColor: Color(0xff7ACBAA),
+                    labelColor: Clapme_green,
                     unselectedLabelColor: Colors.grey,
                     indicatorSize: TabBarIndicatorSize.label,
                     indicatorPadding: EdgeInsets.all(5.0),
-                    indicatorColor: Color(0xff7ACBAA),
+                    indicatorColor: Clapme_green,
                   ),
                   body: TabBarView(
                     children: [RoutineListScreen(), GoalList(), MyPage()],
