@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:clapme_client/theme/color_theme.dart';
+
 import 'dart:ui' as ui;
 
 class MyPage extends StatefulWidget {
@@ -22,7 +24,7 @@ class _MyPageState extends State<MyPage> {
           return new Stack(
             children: <Widget>[
               new Container(
-                color: Color(0xff7ACBAA),
+                color: Clapme_green,
               ),
               new Image.network(
                 snapshot.data['pic'],
@@ -40,7 +42,7 @@ class _MyPageState extends State<MyPage> {
                     ),
                   )),
               new Scaffold(
-                  backgroundColor: Color(0xff7ACBAA),
+                  backgroundColor: Clapme_green,
                   body: new Center(
                     child: new Column(
                       children: <Widget>[
