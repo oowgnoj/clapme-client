@@ -9,6 +9,7 @@ import 'package:clapme_client/screens/goal_list_screen.dart';
 import 'package:clapme_client/screens/routine_list_screen.dart';
 import 'package:clapme_client/screens/routine_list_weekly_screen.dart';
 import 'package:clapme_client/screens/main_screen.dart';
+import 'package:clapme_client/screens/new_routine_screen.dart';
 import 'package:clapme_client/screens/goal_detail_screen.dart';
 import 'package:clapme_client/screens/mypage_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -63,11 +64,11 @@ class _MyAppState extends State<MyApp> {
           '/signup': (BuildContext context) => new Signup(),
           '/login': (BuildContext context) => new Login(),
           '/onboarding': (BuildContext context) => new Onboarding(),
-          '/routinelist': (BuildContext context) => new MainScrren(),
+          // '/routinelist': (BuildContext context) => new MainScrren(),
           // '/routinelist': (BuildContext context) => new GoalList(),
           '/goaldetail': (BuildContext context) => new GoalDetail(),
         },
-        initialRoute: widget.isLogged ? '/' : '/login',
+        initialRoute: widget.isLogged ? '/' : '/',
         home: widget.isLogged
             ? DefaultTabController(
                 length: 3,
@@ -85,7 +86,7 @@ class _MyAppState extends State<MyApp> {
                     indicatorColor: Clapme_green,
                   ),
                   body: TabBarView(
-                    children: [MainScrren(), GoalList(), MyPage()],
+                    children: [NewRoutine(), GoalList(), MyPage()],
                   ),
                 ),
               )
@@ -94,4 +95,4 @@ class _MyAppState extends State<MyApp> {
 }
 
 // final routes = {'/': (BuildContext context) => HomeScreen};
-final routes = {'/': (BuildContext context) => MainScrren};
+final routes = {'/': (BuildContext context) => NewRoutine};
