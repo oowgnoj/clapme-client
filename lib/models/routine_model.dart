@@ -1,8 +1,7 @@
 class Routine {
-  int id;
-  /* int userId; */
-  int goalId;
   String title;
+  String color;
+  String description;
   bool mon;
   bool tue;
   bool wed;
@@ -10,33 +9,36 @@ class Routine {
   bool fri;
   bool sat;
   bool sun;
-  int timeAt;
-  // String createdAt;
 
-  // successes 추가해야함
+  Routine(
+      {this.title,
+      this.mon,
+      this.tue,
+      this.wed,
+      this.thu,
+      this.fri,
+      this.sat,
+      this.sun,
+      this.color,
+      this.description});
 
-  Routine({
-    this.id,
-    /* this.userId, */
-    this.goalId,
-    this.title,
-    this.mon,
-    this.tue,
-    this.wed,
-    this.thu,
-    this.fri,
-    this.sat,
-    this.sun,
-    this.timeAt,
-    // this.createdAt
-    // successes 추가해야함
-  });
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'mon': mon,
+      'tue': tue,
+      'wed': wed,
+      'thu': thu,
+      'fri': fri,
+      'sat': sat,
+      'sun': sun,
+      'color': color,
+      'description': description
+    };
+  }
 
   factory Routine.fromJson(dynamic json) {
     return Routine(
-        id: json['id'],
-        /* userId: json['userId'], */
-        goalId: json['goal_id'],
         title: json['title'],
         mon: json['mon'],
         tue: json['tue'],
@@ -45,54 +47,76 @@ class Routine {
         fri: json['fri'],
         sat: json['sat'],
         sun: json['sun'],
-        timeAt: json['time_at']);
-    // createdAt: json['created']);
-  }
-
-  isScheduled(String dayOfWeek) {
-    // 해당 루틴에 특정 요일 알람이 설정되었는지 여부 반환
-    switch (dayOfWeek) {
-      case 'mon':
-        return this.mon;
-      case 'tue':
-        return this.tue;
-      case 'wed':
-        return this.wed;
-      case 'thu':
-        return this.thu;
-      case 'fri':
-        return this.fri;
-      case 'sat':
-        return this.sat;
-      case 'sun':
-        return this.sun;
-    }
-  }
-
-  getScheduledWeekdaysOfRoutine() {
-    // 해당 루틴 알람 요일들 반환
-    List<String> weekdays = [];
-    if (this.mon == true) weekdays.add('mon');
-    if (this.tue == true) weekdays.add('tue');
-    if (this.wed == true) weekdays.add('wed');
-    if (this.thu == true) weekdays.add('thu');
-    if (this.fri == true) weekdays.add('fri');
-    if (this.sat == true) weekdays.add('sat');
-    if (this.sun == true) weekdays.add('sun');
-    return weekdays;
+        color: json['color'],
+        description: json['description']);
   }
 }
 
-// single recommended routine
-class RoutineRecommend {
-  int id;
+class RoutineMaterial {
+  List<RoutineColor> routineColor;
+
+  RoutineMaterial({this.routineColor});
+  factory RoutineMaterial.fromJson(Map<String, dynamic> json) {
+    var colors = json['colors'] as List;
+    var parsedColors = colors.map((e) => RoutineColor.fromJson(e)).toList();
+    return RoutineMaterial(routineColor: parsedColors);
+  }
+}
+
+class RoutineColor {
+  String main;
+  String sub;
+  RoutineColor({this.main, this.sub});
+
+  factory RoutineColor.fromJson(Map<String, dynamic> json) {
+    return new RoutineColor(
+      main: json['main'],
+      sub: json['sub'],
+    );
+  }
+}
+
+class RoutineIdea {
   String title;
-  RoutineRecommend({this.id, this.title});
+  String subTitle;
+  String contents;
+  String picUrl;
+  List<RoutineIdeasRoutines> routines;
+
+  RoutineIdea(
+      {this.title, this.subTitle, this.contents, this.picUrl, this.routines});
+
+  factory RoutineIdea.fromJson(Map<String, dynamic> json) {
+    var routines = json['routines'] as List;
+    var parsedRoutines =
+        routines.map((e) => RoutineIdeasRoutines.fromJson(e)).toList();
+    return new RoutineIdea(
+        title: json['title'],
+        subTitle: json['subtitle'],
+        contents: json['contents'],
+        picUrl: json['picUrl'],
+        routines: parsedRoutines);
+  }
+}
+
+class RoutineIdeasRoutines {
+  String time;
+  String title;
+  RoutineIdeasRoutines({this.title, this.time});
+  factory RoutineIdeasRoutines.fromJson(Map<String, dynamic> json) {
+    return new RoutineIdeasRoutines(title: json['title'], time: json['time']);
+  }
+}
+
+class RoutineRecommend {
+  int main;
+  int sub;
+  RoutineRecommend({this.main, this.sub});
 
   factory RoutineRecommend.fromJson(Map<String, dynamic> json) {
     return new RoutineRecommend(
-      id: json['id'],
-      title: json['title'],
+      main: json['id'],
+      sub: json['title'],
     );
   }
 }

@@ -258,26 +258,27 @@ class _RoutineListState extends State<RoutineList> {
                           List<RoutineRecommend> list = snapshot.data;
                           return GestureDetector(
                             onTap: () {
-                              widget.handleState(list[index].title);
+                              // widget.handleState(list[index].title);
                               setState(() {
                                 selected = index;
                               });
                             },
                             child: Container(
-                                margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                                padding: EdgeInsets.fromLTRB(0, 20, 20, 20),
-                                decoration: BoxDecoration(
-                                    border: Border(
-                                        bottom: BorderSide(
-                                            color: selected == index
-                                                ? StrongGreen
-                                                : LightGrey))),
-                                child: Text(
-                                  '${list[index].title}',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20),
-                                )),
+                              margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                              padding: EdgeInsets.fromLTRB(0, 20, 20, 20),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                      bottom: BorderSide(
+                                          color: selected == index
+                                              ? StrongGreen
+                                              : LightGrey))),
+                              // child: Text(
+                              // '${list[index].title}',
+                              //   style: TextStyle(
+                              //       fontWeight: FontWeight.bold,
+                              //       fontSize: 20),
+                              // )
+                            ),
                           );
                         }),
                   ),

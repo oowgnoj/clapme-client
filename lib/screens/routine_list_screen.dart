@@ -27,8 +27,8 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
   @override
   initState() {
     super.initState();
-    weeklyRoutines =
-        fetchDayRoutine(DateFormat('E').format(DateTime.now()).toLowerCase());
+    // weeklyRoutines =
+    // fetchDayRoutine(DateFormat('E').format(DateTime.now()).toLowerCase());
   }
 
   onSelect(data) async {
@@ -138,13 +138,13 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
           ListTile(
             leading: Icon(Icons.access_time),
             title: Text(routine.title),
-            subtitle: Text(routine.timeAt >= 1000
-                ? routine.timeAt.toString().substring(0, 2) +
-                    ' : ' +
-                    routine.timeAt.toString().substring(2)
-                : routine.timeAt.toString().substring(0, 1) +
-                    ' : ' +
-                    routine.timeAt.toString().substring(1)),
+            // subtitle: Text(routine.timeAt >= 1000
+            //     ? routine.timeAt.toString().substring(0, 2) +
+            //         ' : ' +
+            //         routine.timeAt.toString().substring(2)
+            //     : routine.timeAt.toString().substring(0, 1) +
+            //         ' : ' +
+            //         routine.timeAt.toString().substring(1)),
           ),
           ButtonBar(
             children: <Widget>[
