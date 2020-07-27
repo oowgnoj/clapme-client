@@ -2,24 +2,26 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:clapme_client/models/routine_model.dart';
 import 'package:clapme_client/services/alarm_service.dart';
+import 'package:clapme_client/utils/common_func.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 var server = 'http://15.164.96.238:5000';
 
 // 루틴 등록
 
-Future<Object> postRoutine(body) async {
+Future<Object> postRoutine(Routine body) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String accessToken = prefs.getString('accessToken');
   var headers = <String, String>{
     'Content-Type': 'application/json; charset=UTF-8',
     'Authorization': accessToken
   };
-
+  var jsonBody = json.encode(body.toJson(), toEncodable: myDateSerializer);
   final response = await http.post(
     server + '/routine',
     headers: headers,
-    body: jsonEncode(body.toJson()),
+    body: jsonBody,
   );
   if (response.statusCode == 200) {
     return true;

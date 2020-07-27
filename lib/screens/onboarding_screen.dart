@@ -157,36 +157,36 @@ class _OnboardingState extends State<Onboarding> {
           borderRadius: new BorderRadius.circular(10.0),
         ),
         fillColor: StrongGreen,
-        onPressed: () async {
-          // routine post page
-          if (currentPage == 3) {
-            bool isPostSuccess = await postRoutine(body);
-            if (isPostSuccess) {
-              Navigator.of(context).pushNamed('/routinelist');
-            } else {
-              Alert(
-                      context: context,
-                      type: AlertType.none,
-                      style: alertFailedStyle,
-                      title: "등록 실패 🤔",
-                      desc: "다시 시도해주세요")
-                  .show();
-            }
-          } else {
-            if (pageInputValidator[currentPage]) {
-              setState(() {
-                currentPage = currentPage + 1;
-              });
-            } else {
-              Alert(
-                      context: context,
-                      type: AlertType.none,
-                      style: alertFailedStyle,
-                      title: "입력해주세요 ⭐️")
-                  .show();
-            }
-          }
-        },
+        // onPressed: () async {
+        //   // routine post page
+        //   if (currentPage == 3) {
+        //     bool isPostSuccess = await postRoutine(body);
+        //     if (isPostSuccess) {
+        //       Navigator.of(context).pushNamed('/routinelist');
+        //     } else {
+        //       Alert(
+        //               context: context,
+        //               type: AlertType.none,
+        //               style: alertFailedStyle,
+        //               title: "등록 실패 🤔",
+        //               desc: "다시 시도해주세요")
+        //           .show();
+        //     }
+        //   } else {
+        //     if (pageInputValidator[currentPage]) {
+        //       setState(() {
+        //         currentPage = currentPage + 1;
+        //       });
+        //     } else {
+        //       Alert(
+        //               context: context,
+        //               type: AlertType.none,
+        //               style: alertFailedStyle,
+        //               title: "입력해주세요 ⭐️")
+        //           .show();
+        //     }
+        //   }
+        // },
         child: Text(
           '다음으로',
           style: TextStyle(

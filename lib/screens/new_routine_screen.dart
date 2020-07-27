@@ -4,8 +4,11 @@ import 'package:clapme_client/components/daypicker_component.dart';
 import 'package:clapme_client/models/routine_model.dart';
 import 'package:clapme_client/services/routine_service.dart';
 import 'package:clapme_client/services/idea_service.dart';
+import 'package:clapme_client/utils/common_func.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 const StrongGrey = Color.fromRGBO(126, 131, 129, 1);
+const WeakBlack = Color.fromRGBO(98, 98, 98, 1);
 const MediumGrey = Color.fromRGBO(109, 109, 109, 1);
 const LightGrey = Color.fromRGBO(242, 242, 242, 1);
 
@@ -16,11 +19,11 @@ class NewRoutine extends StatefulWidget {
 
 class _NewRoutineState extends State<NewRoutine> {
   Future<RoutineIdea> randomIdea = fetchRandomIdea();
-  Routine routineState;
+  // 2
   String title, description;
   String colorCode;
-  bool alarm;
-  DateTime alarmTime = DateTime.now();
+  bool alarm = true;
+  String alarmTime = convertDateTimeToHHMMString(DateTime.now());
   Map<String, bool> days = {
     'mon': false,
     'tue': false,
@@ -80,7 +83,7 @@ class _NewRoutineState extends State<NewRoutine> {
         borderRadius: BorderRadius.circular(10),
         color: LightGrey,
       ),
-      width: 73.0,
+      width: 100.0,
       height: 54.0,
       child: Center(child: Text('cancel', textAlign: TextAlign.center)));
 
@@ -90,12 +93,12 @@ class _NewRoutineState extends State<NewRoutine> {
           borderRadius: BorderRadius.circular(10),
           color: LightGrey,
         ),
-        width: 73.0,
+        width: 100,
         height: 54.0,
         child: Center(child: Text('submit', textAlign: TextAlign.center)));
   }
 
-  Widget timeButton(alarmTime) {
+  Widget timeButton(String alarmTime) {
     return Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -107,15 +110,7 @@ class _NewRoutineState extends State<NewRoutine> {
           padding: const EdgeInsets.all(10.0),
           child: new Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text('Time'),
-              Text(
-                '> ' +
-                    alarmTime.hour.toString() +
-                    ': ' +
-                    alarmTime.minute.toString(),
-              )
-            ],
+            children: <Widget>[Text('Time'), Text('> ' + alarmTime)],
           ),
         ));
   }
@@ -176,66 +171,73 @@ class _NewRoutineState extends State<NewRoutine> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(25, 60, 25, 20),
-      child: new Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          titleText,
-          new Row(
-            children: <Widget>[
-              routineInput(handleTitle),
-              SizedBox(width: 10, height: 30),
-              GestureDetector(
-                  onTap: () {
-                    routineIdeaSheet(context, this.randomIdea);
-                  },
-                  child: ideasButton)
-            ],
-          ),
-          _daysList(days, handleDays),
-          Container(
-              child: Text(
-            'Time best works for you',
-            style: TextStyle(
-                fontSize: 24, color: StrongGrey, fontWeight: FontWeight.bold),
-          )),
-          GestureDetector(
-              onTap: () {
-                timePickerSheet(context, handleAlarmTime);
-              },
-              child: timeButton(this.alarmTime)),
-          Container(
-              child: Text(
-            'Routine color',
-            style: TextStyle(
-                fontSize: 24, color: StrongGrey, fontWeight: FontWeight.bold),
-          )),
-          _colorList(handleColor),
-          descriptionField(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              cancelButton,
-              GestureDetector(
-                  onTap: () async {
-                    var body = new Routine(
-                        title: this.title,
-                        color: this.colorCode,
-                        mon: this.days['mon'],
-                        tue: this.days['tue'],
-                        wed: this.days['wed'],
-                        thu: this.days['thu'],
-                        fri: this.days['fri'],
-                        sat: this.days['sat'],
-                        sun: this.days['sun'],
-                        description: this.description);
-                    var answer = await postRoutine(body);
-                  },
-                  child: submitButton()),
-            ],
-          )
-        ],
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(25, 60, 25, 20),
+        child: new Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            titleText,
+            new Row(
+              children: <Widget>[
+                routineInput(handleTitle),
+                SizedBox(width: 10, height: 30),
+                GestureDetector(
+                    onTap: () {
+                      routineIdeaSheet(context, this.randomIdea, handleTitle,
+                          handleAlarmTime);
+                    },
+                    child: ideasButton)
+              ],
+            ),
+            _daysList(days, handleDays),
+            Container(
+                child: Text(
+              'Time best works for you',
+              style: TextStyle(
+                  fontSize: 24, color: StrongGrey, fontWeight: FontWeight.bold),
+            )),
+            GestureDetector(
+                onTap: () {
+                  timePickerSheet(context, handleAlarmTime);
+                },
+                child: timeButton(this.alarmTime)),
+            Container(
+                child: Text(
+              'Routine color',
+              style: TextStyle(
+                  fontSize: 24, color: StrongGrey, fontWeight: FontWeight.bold),
+            )),
+            _colorList(handleColor),
+            descriptionField(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                cancelButton,
+                GestureDetector(
+                    onTap: () async {
+                      var body = new Routine(
+                          title: this.title,
+                          time: this.alarmTime,
+                          alarm: this.alarm,
+                          color: this.colorCode,
+                          mon: this.days['mon'],
+                          tue: this.days['tue'],
+                          wed: this.days['wed'],
+                          thu: this.days['thu'],
+                          fri: this.days['fri'],
+                          sat: this.days['sat'],
+                          sun: this.days['sun'],
+                          description: this.description);
+                      var answer = await postRoutine(body);
+                    },
+                    child: submitButton()),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -319,14 +321,14 @@ void timePickerSheet(context, handleAlarmTime) {
             child: CupertinoDatePicker(
                 backgroundColor: Color.fromRGBO(249, 249, 249, 1),
                 mode: CupertinoDatePickerMode.time,
-                use24hFormat: false,
+                use24hFormat: true,
                 onDateTimeChanged: (DateTime changedTime) {
-                  handleAlarmTime(changedTime);
+                  handleAlarmTime(convertDateTimeToHHMMString(changedTime));
                 }));
       });
 }
 
-void routineIdeaSheet(context, randomIdea) {
+void routineIdeaSheet(context, randomIdea, handleTitle, handleAlarmTime) {
   showModalBottomSheet(
       isScrollControlled: true,
       context: context,
@@ -365,16 +367,70 @@ void routineIdeaSheet(context, randomIdea) {
                                     Text(
                                       snapshot.data.title,
                                       style: TextStyle(
-                                          fontSize: 21, color: StrongGrey),
+                                          fontSize: 21,
+                                          color: StrongGrey,
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                    Image.network(
-                                      snapshot.data.picUrl,
+                                    SizedBox(height: 20),
+                                    Container(
+                                      height: 215.5,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(20),
+                                        child: Image.network(
+                                          snapshot.data.picUrl,
+                                        ),
+                                      ),
                                     ),
+                                    SizedBox(height: 20),
                                     Text(
                                       snapshot.data.contents,
-                                      style: TextStyle(
-                                          fontSize: 12, color: StrongGrey),
+                                      style: GoogleFonts.slabo13px(
+                                          textStyle: Theme.of(context)
+                                              .textTheme
+                                              .display1,
+                                          height: 1.5,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w100,
+                                          color: WeakBlack),
                                     ),
+                                    SizedBox(height: 20),
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          10, 0, 10, 0),
+                                      child: Container(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.1,
+                                        child: ListView.builder(
+                                            itemCount:
+                                                snapshot.data.routines.length,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              var routines =
+                                                  snapshot.data.routines;
+                                              return GestureDetector(
+                                                  onTap: () {
+                                                    handleAlarmTime(
+                                                        routines[index].time);
+                                                    handleTitle(
+                                                        routines[index].title);
+                                                  },
+                                                  child: Text(
+                                                    '+ ' +
+                                                        routines[index]
+                                                            .title
+                                                            .toUpperCase() +
+                                                        ' ' +
+                                                        routines[index]
+                                                            .time
+                                                            .toUpperCase(),
+                                                    style: TextStyle(
+                                                      fontSize: 15,
+                                                    ),
+                                                  ));
+                                            }),
+                                      ),
+                                    )
                                   ]))
                         ],
                       ),

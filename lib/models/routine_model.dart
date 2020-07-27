@@ -2,6 +2,8 @@ class Routine {
   String title;
   String color;
   String description;
+  String time;
+  bool alarm;
   bool mon;
   bool tue;
   bool wed;
@@ -12,6 +14,8 @@ class Routine {
 
   Routine(
       {this.title,
+      this.time,
+      this.alarm,
       this.mon,
       this.tue,
       this.wed,
@@ -25,6 +29,8 @@ class Routine {
   Map<String, dynamic> toJson() {
     return {
       'title': title,
+      'alarm': alarm,
+      'time': time,
       'mon': mon,
       'tue': tue,
       'wed': wed,
@@ -40,6 +46,8 @@ class Routine {
   factory Routine.fromJson(dynamic json) {
     return Routine(
         title: json['title'],
+        alarm: json['alarm'],
+        time: json['time'],
         mon: json['mon'],
         tue: json['tue'],
         wed: json['wed'],

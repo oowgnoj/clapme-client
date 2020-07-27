@@ -69,28 +69,7 @@ class _MyAppState extends State<MyApp> {
           '/goaldetail': (BuildContext context) => new GoalDetail(),
         },
         initialRoute: widget.isLogged ? '/' : '/',
-        home: widget.isLogged
-            ? DefaultTabController(
-                length: 3,
-                child: Scaffold(
-                  bottomNavigationBar: new TabBar(
-                    tabs: [
-                      Tab(icon: Icon(Icons.list)),
-                      Tab(icon: Icon(Icons.flag)),
-                      Tab(icon: Icon(Icons.account_box)),
-                    ],
-                    labelColor: Clapme_green,
-                    unselectedLabelColor: Colors.grey,
-                    indicatorSize: TabBarIndicatorSize.label,
-                    indicatorPadding: EdgeInsets.all(5.0),
-                    indicatorColor: Clapme_green,
-                  ),
-                  body: TabBarView(
-                    children: [NewRoutine(), GoalList(), MyPage()],
-                  ),
-                ),
-              )
-            : HomeScreen());
+        home: Scaffold(body: NewRoutine()));
   }
 }
 
