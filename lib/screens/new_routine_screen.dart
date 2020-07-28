@@ -21,9 +21,21 @@ class _NewRoutineState extends State<NewRoutine> {
   Future<RoutineIdea> randomIdea = fetchRandomIdea();
   // 2
   String title, description;
-  String colorCode;
+  String colorCode = '';
   bool alarm = true;
   String alarmTime = convertDateTimeToHHMMString(DateTime.now());
+  TextEditingController _c;
+  void initState() {
+    _c = new TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _c?.dispose();
+    super.dispose();
+  }
+
   Map<String, bool> days = {
     'mon': false,
     'tue': false,
@@ -34,18 +46,26 @@ class _NewRoutineState extends State<NewRoutine> {
     'sun': false
   };
 
-  Widget titleText = Container(
-      child: Text(
-    'New Routine',
-    style:
-        TextStyle(fontSize: 30, color: StrongGrey, fontWeight: FontWeight.bold),
-  ));
+  Widget titleText(colorCode) {
+    Color color = StrongGrey;
+
+    if (colorCode != '') {
+      color = Color(int.parse(colorCode));
+    }
+
+    return Container(
+        child: Text(
+      'New Routine',
+      style: TextStyle(fontSize: 30, color: color, fontWeight: FontWeight.bold),
+    ));
+  }
 
   Widget routineInput(handleTitle) {
     return SizedBox(
         width: 237.0,
         height: 54.0,
         child: TextField(
+            controller: _c,
             onChanged: (txt) {
               handleTitle(txt);
             },
@@ -143,6 +163,7 @@ class _NewRoutineState extends State<NewRoutine> {
     setState(() {
       title = text;
     });
+    _c.text = text;
   }
 
   handleDays(day) {
@@ -179,7 +200,7 @@ class _NewRoutineState extends State<NewRoutine> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            titleText,
+            titleText(this.colorCode),
             new Row(
               children: <Widget>[
                 routineInput(handleTitle),
@@ -232,6 +253,7 @@ class _NewRoutineState extends State<NewRoutine> {
                           sun: this.days['sun'],
                           description: this.description);
                       var answer = await postRoutine(body);
+                      print(answer);
                     },
                     child: submitButton()),
               ],
@@ -410,6 +432,7 @@ void routineIdeaSheet(context, randomIdea, handleTitle, handleAlarmTime) {
                                                   snapshot.data.routines;
                                               return GestureDetector(
                                                   onTap: () {
+                                                    Navigator.pop(context);
                                                     handleAlarmTime(
                                                         routines[index].time);
                                                     handleTitle(
