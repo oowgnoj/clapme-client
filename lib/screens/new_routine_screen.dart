@@ -6,11 +6,16 @@ import 'package:clapme_client/services/routine_service.dart';
 import 'package:clapme_client/services/idea_service.dart';
 import 'package:clapme_client/utils/common_func.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:clapme_client/utils/alert_style.dart';
 
 const StrongGrey = Color.fromRGBO(126, 131, 129, 1);
 const WeakBlack = Color.fromRGBO(98, 98, 98, 1);
 const MediumGrey = Color.fromRGBO(109, 109, 109, 1);
 const LightGrey = Color.fromRGBO(242, 242, 242, 1);
+
+const SubTitleTS =
+    TextStyle(fontSize: 24, color: StrongGrey, fontWeight: FontWeight.bold);
 
 class NewRoutine extends StatefulWidget {
   @override
@@ -159,6 +164,34 @@ class _NewRoutineState extends State<NewRoutine> {
                 fillColor: LightGrey)));
   }
 
+  addNewRoutine() async {
+    var body = new Routine(
+        title: this.title,
+        time: this.alarmTime,
+        alarm: this.alarm,
+        color: this.colorCode,
+        mon: this.days['mon'],
+        tue: this.days['tue'],
+        wed: this.days['wed'],
+        thu: this.days['thu'],
+        fri: this.days['fri'],
+        sat: this.days['sat'],
+        sun: this.days['sun'],
+        description: this.description);
+    var answer = await postRoutine(body);
+    if (answer) {
+      // go to routine list page
+    } else {
+      Alert(
+              context: context,
+              type: AlertType.none,
+              style: alertFailedStyle,
+              title: "등록 실패 🤔",
+              desc: "다시 시도해주세요")
+          .show();
+    }
+  }
+
   handleTitle(text) {
     setState(() {
       title = text;
@@ -217,8 +250,7 @@ class _NewRoutineState extends State<NewRoutine> {
             Container(
                 child: Text(
               'Time best works for you',
-              style: TextStyle(
-                  fontSize: 24, color: StrongGrey, fontWeight: FontWeight.bold),
+              style: SubTitleTS,
             )),
             GestureDetector(
                 onTap: () {
@@ -228,8 +260,7 @@ class _NewRoutineState extends State<NewRoutine> {
             Container(
                 child: Text(
               'Routine color',
-              style: TextStyle(
-                  fontSize: 24, color: StrongGrey, fontWeight: FontWeight.bold),
+              style: SubTitleTS,
             )),
             _colorList(handleColor),
             descriptionField(),
@@ -239,21 +270,7 @@ class _NewRoutineState extends State<NewRoutine> {
                 cancelButton,
                 GestureDetector(
                     onTap: () async {
-                      var body = new Routine(
-                          title: this.title,
-                          time: this.alarmTime,
-                          alarm: this.alarm,
-                          color: this.colorCode,
-                          mon: this.days['mon'],
-                          tue: this.days['tue'],
-                          wed: this.days['wed'],
-                          thu: this.days['thu'],
-                          fri: this.days['fri'],
-                          sat: this.days['sat'],
-                          sun: this.days['sun'],
-                          description: this.description);
-                      var answer = await postRoutine(body);
-                      print(answer);
+                      await addNewRoutine();
                     },
                     child: submitButton()),
               ],
