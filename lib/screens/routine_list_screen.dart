@@ -4,6 +4,8 @@ import 'package:clapme_client/models/routine_model.dart';
 import 'package:clapme_client/models/schedule_model.dart';
 import 'package:clapme_client/services/routine_service.dart';
 import 'package:intl/intl.dart';
+import 'package:clapme_client/screens/routine_list_weekly_screen.dart';
+import 'package:clapme_client/theme/color_theme.dart';
 
 class RoutineListScreen extends StatefulWidget {
   @override
@@ -25,8 +27,8 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
   @override
   initState() {
     super.initState();
-    weeklyRoutines =
-        fetchDayRoutine(DateFormat('E').format(DateTime.now()).toLowerCase());
+    // weeklyRoutines =
+    // fetchDayRoutine(DateFormat('E').format(DateTime.now()).toLowerCase());
   }
 
   onSelect(data) async {
@@ -136,13 +138,13 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
           ListTile(
             leading: Icon(Icons.access_time),
             title: Text(routine.title),
-            subtitle: Text(routine.timeAt >= 1000
-                ? routine.timeAt.toString().substring(0, 2) +
-                    ' : ' +
-                    routine.timeAt.toString().substring(2)
-                : routine.timeAt.toString().substring(0, 1) +
-                    ' : ' +
-                    routine.timeAt.toString().substring(1)),
+            // subtitle: Text(routine.timeAt >= 1000
+            //     ? routine.timeAt.toString().substring(0, 2) +
+            //         ' : ' +
+            //         routine.timeAt.toString().substring(2)
+            //     : routine.timeAt.toString().substring(0, 1) +
+            //         ' : ' +
+            //         routine.timeAt.toString().substring(1)),
           ),
           ButtonBar(
             children: <Widget>[
@@ -193,12 +195,33 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
               child: CircularProgressIndicator(),
             );
           }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).pushNamed('/onboarding');
-        },
-        child: Icon(Icons.add),
-        backgroundColor: Color(0xff7ACBAA),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(30, 0, 0, 0),
+            child: FloatingActionButton(
+              heroTag: "weeklySchedule",
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            RoutineListWeekly(schedule: weeklySchedule)));
+                // Navigator.of(context).pushNamed('/routinelistWeekly');
+              },
+              child: Icon(Icons.check, color: Clapme_green),
+              backgroundColor: Colors.white,
+            ),
+          ),
+          FloatingActionButton(
+              heroTag: "addRoutine",
+              onPressed: () {
+                Navigator.of(context).pushNamed('/onboarding');
+              },
+              child: Icon(Icons.add),
+              backgroundColor: Clapme_green),
+        ],
       ),
     );
   }

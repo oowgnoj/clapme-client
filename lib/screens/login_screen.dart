@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:clapme_client/services/auth_service.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:clapme_client/utils/alert_style.dart';
+import 'package:clapme_client/theme/color_theme.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -34,7 +35,7 @@ class _LoginState extends State<Login> {
                 style: TextStyle(
                     fontSize: 90.0,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xff7ACBAA))),
+                    color: Clapme_green)),
           )
         ],
       ),
@@ -57,7 +58,7 @@ class _LoginState extends State<Login> {
           child: Text(
             '회원가입',
             style: TextStyle(
-                color: Color(0xff7ACBAA),
+                color: Clapme_green,
                 fontFamily: 'Montserrat',
                 fontWeight: FontWeight.bold,
                 decoration: TextDecoration.underline),
@@ -76,7 +77,7 @@ class _LoginState extends State<Login> {
               fontWeight: FontWeight.bold,
               color: Colors.black),
           focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Color(0xff7ACBAA)))),
+              borderSide: BorderSide(color: Clapme_green))),
       validator: (value) => value.isEmpty ? '이메일을 입력해주세요' : null,
       onSaved: (value) => _email = value,
     );
@@ -91,7 +92,7 @@ class _LoginState extends State<Login> {
               fontWeight: FontWeight.bold,
               color: Colors.black),
           focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Color(0xff7ACBAA)))),
+              borderSide: BorderSide(color: Clapme_green))),
       validator: (value) => value.isEmpty ? '패스워드를 입력해주세요' : null,
       onSaved: (value) => _password = value,
       obscureText: true,
@@ -103,7 +104,7 @@ class _LoginState extends State<Login> {
       height: 50.0,
       child: Material(
         borderRadius: BorderRadius.circular(20.0),
-        color: Color(0xff7ACBAA),
+        color: Clapme_green,
         elevation: 1.0,
         child: MaterialButton(
           onPressed: validateAndSave,
@@ -127,7 +128,7 @@ class _LoginState extends State<Login> {
       form.save();
       bool isLoginSuccess = await fetchLogin(_email, _password);
       if (isLoginSuccess) {
-        Navigator.of(context).pushNamed('/onboarding');
+        Navigator.of(context).pushNamed('/routinelist');
       } else {
         Alert(
                 context: context,
