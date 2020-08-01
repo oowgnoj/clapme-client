@@ -1,14 +1,20 @@
 import 'dart:async';
 
+import 'package:clapme_client/screens/today_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:clapme_client/screens/home_screen.dart';
 import 'package:clapme_client/screens/login_screen.dart';
 import 'package:clapme_client/screens/signup_screen.dart';
 import 'package:clapme_client/screens/onboarding_screen.dart';
+import 'package:clapme_client/screens/goal_list_screen.dart';
 import 'package:clapme_client/screens/routine_list_screen.dart';
 import 'package:clapme_client/screens/routine_list_weekly_screen.dart';
+import 'package:clapme_client/screens/main_screen.dart';
+import 'package:clapme_client/screens/new_routine_screen.dart';
+import 'package:clapme_client/screens/goal_detail_screen.dart';
 import 'package:clapme_client/screens/mypage_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:clapme_client/theme/color_theme.dart';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:clapme_client/components/nofi_component.dart';
@@ -59,32 +65,15 @@ class _MyAppState extends State<MyApp> {
           '/signup': (BuildContext context) => new Signup(),
           '/login': (BuildContext context) => new Login(),
           '/onboarding': (BuildContext context) => new Onboarding(),
-          '/routinelist': (BuildContext context) => new MyPage(),
+          '/today': (BuildContext context) => new Today(),
+          // '/routinelist': (BuildContext context) => new MainScrren(),
+          // '/routinelist': (BuildContext context) => new GoalList(),
+          '/goaldetail': (BuildContext context) => new GoalDetail(),
         },
-        initialRoute: widget.isLogged ? '/routinelist' : '/',
-        home: widget.isLogged
-            ? DefaultTabController(
-                length: 3,
-                child: Scaffold(
-                  bottomNavigationBar: new TabBar(
-                    tabs: [
-                      Tab(icon: Icon(Icons.list)),
-                      Tab(icon: Icon(Icons.flag)),
-                      Tab(icon: Icon(Icons.account_box)),
-                    ],
-                    labelColor: Color(0xff7ACBAA),
-                    unselectedLabelColor: Colors.grey,
-                    indicatorSize: TabBarIndicatorSize.label,
-                    indicatorPadding: EdgeInsets.all(5.0),
-                    indicatorColor: Color(0xff7ACBAA),
-                  ),
-                  body: TabBarView(
-                    children: [RoutineListScreen(), Onboarding(), MyPage()],
-                  ),
-                ),
-              )
-            : HomeScreen());
+        initialRoute: widget.isLogged ? '/' : '/',
+        home: Scaffold(body: Today()));
   }
 }
 
-final routes = {'/': (BuildContext context) => HomeScreen};
+// final routes = {'/': (BuildContext context) => HomeScreen};
+final routes = {'/': (BuildContext context) => NewRoutine};

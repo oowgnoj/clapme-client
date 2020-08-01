@@ -40,3 +40,23 @@ Day convertWeekdayStringToDayEnum(String weekday) {
       return Day.Sunday;
   }
 }
+
+String convertDateTimeToHHMMString(DateTime datetime) {
+  var hour = datetime.hour.toString();
+  var min = datetime.minute.toString();
+  if (hour.length == 1) {
+    hour = '0' + hour;
+  }
+  if (min.length == 1) {
+    min = '0' + min;
+  }
+  return hour + min;
+}
+
+dynamic myDateSerializer(dynamic object) {
+  String parsedTime;
+  if (object is DateTime) {
+    String parsedTime = convertDateTimeToHHMMString(object);
+    return parsedTime;
+  }
+}

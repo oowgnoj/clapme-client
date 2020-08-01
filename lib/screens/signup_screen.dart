@@ -2,6 +2,7 @@ import 'package:clapme_client/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:clapme_client/utils/alert_style.dart';
+import 'package:clapme_client/theme/color_theme.dart';
 
 class Signup extends StatefulWidget {
   @override
@@ -30,7 +31,7 @@ class _SignupState extends State<Signup> {
                 style: TextStyle(
                     fontSize: 100.0,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xff7ACBAA))),
+                    color: Clapme_green)),
           )
         ],
       ),
@@ -49,7 +50,7 @@ class _SignupState extends State<Signup> {
           // hintStyle: ,
           focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(
-            color: Color(0xff7ACBAA),
+            color: Clapme_green,
           ))),
       validator: (value) => value.isEmpty ? '이메일을 입력해주세요' : null,
       onSaved: (value) => _email = value,
@@ -65,7 +66,7 @@ class _SignupState extends State<Signup> {
               fontWeight: FontWeight.bold,
               color: Colors.black),
           focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Color(0xff7ACBAA)))),
+              borderSide: BorderSide(color: Clapme_green))),
       obscureText: true,
       validator: (value) => value.isEmpty ? '패스워드를 입력해주세요' : null,
       onSaved: (value) => _password = value,
@@ -81,7 +82,7 @@ class _SignupState extends State<Signup> {
               fontWeight: FontWeight.bold,
               color: Colors.black),
           focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Color(0xff7ACBAA)))),
+              borderSide: BorderSide(color: Clapme_green))),
       validator: (value) => value.isEmpty ? '이름을 입력해주세요' : null,
       onSaved: (value) => _username = value,
     );
@@ -92,7 +93,7 @@ class _SignupState extends State<Signup> {
         height: 50.0,
         child: Material(
           borderRadius: BorderRadius.circular(20.0),
-          color: Color(0xff7ACBAA),
+          color: Clapme_green,
           elevation: 1.0,
           child: MaterialButton(
             onPressed: validateAndSave,
@@ -156,7 +157,7 @@ class _SignupState extends State<Signup> {
                 ),
                 onPressed: () => Navigator.of(context).pushNamed('/login'),
                 width: 170,
-                color: Color(0xff7ACBAA))
+                color: Clapme_green)
           ],
         ).show();
       } else {
