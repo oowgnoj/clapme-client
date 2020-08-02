@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:clapme_client/screens/today_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:clapme_client/screens/home_screen.dart';
 import 'package:clapme_client/screens/login_screen.dart';
@@ -64,12 +65,13 @@ class _MyAppState extends State<MyApp> {
           '/signup': (BuildContext context) => new Signup(),
           '/login': (BuildContext context) => new Login(),
           '/onboarding': (BuildContext context) => new Onboarding(),
+          '/today': (BuildContext context) => new Today(),
           // '/routinelist': (BuildContext context) => new MainScrren(),
           // '/routinelist': (BuildContext context) => new GoalList(),
           '/goaldetail': (BuildContext context) => new GoalDetail(),
         },
         initialRoute: widget.isLogged ? '/' : '/',
-        home: Scaffold(body: NewRoutine()));
+        home: Scaffold(body: Today()));
   }
 }
 
