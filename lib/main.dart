@@ -65,13 +65,13 @@ class _MyAppState extends State<MyApp> {
           '/signup': (BuildContext context) => new Signup(),
           '/login': (BuildContext context) => new Login(),
           '/onboarding': (BuildContext context) => new Onboarding(),
-          '/today': (BuildContext context) => new Today(),
+          '/today': (BuildContext context) => new TodayScreen(),
           // '/routinelist': (BuildContext context) => new MainScrren(),
           // '/routinelist': (BuildContext context) => new GoalList(),
           '/goaldetail': (BuildContext context) => new GoalDetail(),
         },
         initialRoute: widget.isLogged ? '/' : '/',
-        home: Scaffold(body: Today()));
+        home: Scaffold(body: TodayScreen()));
   }
 }
 

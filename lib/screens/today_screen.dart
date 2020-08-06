@@ -1,4 +1,7 @@
 import 'package:clapme_client/models/routine_with_success_model.dart';
+import 'package:clapme_client/screens/new_routine_screen.dart';
+import 'package:clapme_client/screens/onboarding_screen.dart';
+import 'package:clapme_client/screens/routine_list_screen.dart';
 import 'package:clapme_client/services/routine_success_service.dart';
 import 'package:flutter/material.dart';
 import 'package:clapme_client/theme/color_theme.dart';
@@ -8,21 +11,17 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:clapme_client/utils/alert_style.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
-class Today extends StatefulWidget {
+class TodayScreen extends StatefulWidget {
   @override
-  _TodayState createState() => _TodayState();
+  _TodayScreenState createState() => _TodayScreenState();
 }
 
-class _TodayState extends State<Today> {
+class _TodayScreenState extends State<TodayScreen> {
   RoutineSuccessService service = RoutineSuccessService();
   MainTheme theme = MainTheme();
   DateTime now = DateTime.now();
 
   Future<List<RoutineWithSuccess>> routines;
-
-  // 상단바 hello
-  // progress bar
-  // routines
 
   @override
   void initState() {
@@ -58,6 +57,26 @@ class _TodayState extends State<Today> {
                   '${DateFormat(DateFormat.DAY).format(now)},', 60.0)),
         ),
         Container(child: _buildText(service.getCurrentDay(now), 30.0)),
+        Spacer(),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 50.0),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => NewRoutine()));
+            },
+            child: Icon(Icons.add, size: 20.0, color: Colors.black87),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(10, 0, 0, 50.0),
+          child: GestureDetector(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => RoutineListScreen()));
+              },
+              child: Icon(Icons.list, size: 20.0, color: Colors.black87)),
+        )
       ],
     );
   }
@@ -75,7 +94,6 @@ class _TodayState extends State<Today> {
             color: color,
           ));
     }
-
 
     return Column(
       children: <Widget>[

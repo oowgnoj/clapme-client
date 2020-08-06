@@ -5,6 +5,7 @@ import 'package:clapme_client/services/alarm_service.dart';
 import 'package:clapme_client/utils/common_func.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:clapme_client/utils/api_helper.dart';
 
 var server = 'http://15.164.96.238:5000';
 
@@ -71,6 +72,34 @@ Future<Object> getRecommendList() async {
     return res;
   }
 }
+
+class RoutineService {
+  ApiHelper _api = ApiHelper();
+
+  Future<List<Routine>> getRoutines() async {
+    print('<GET ALL ROUTINES>');
+
+    final response = await this._api.get('routines');
+
+    if (response.statusCode == 200) {
+      var result = json.decode(response.body);
+
+      List<Routine> routines = [];
+      result.forEach((r) => routines.add(Routine.fromJson(r)));
+
+      return routines;
+    } else {
+      String message = 'Network Error, Please try again.';
+
+      if (response.statusCode == 401)
+        message = 'Your session has timed out. Please login again.';
+
+      throw Exception(message);
+    }
+  }
+}
+
+
 
 // Future<List<Routine>> fetchDayRoutine(dayOfWeek) async {
 //   SharedPreferences prefs = await SharedPreferences.getInstance();
