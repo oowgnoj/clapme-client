@@ -32,8 +32,11 @@ class ApiHelper {
     return await http.post(uri, headers: headers, body: jsonBody);
   }
 
-  Future<dynamic> get(String uri, String params) async {
-    uri = '${this._baseUrl}/$uri?$params';
+  Future<dynamic> get(String uri, [String params]) async {
+    uri = params != null
+        ? '${this._baseUrl}/$uri?$params'
+        : '${this._baseUrl}/$uri';
+
     String accessToken = await this._getAccessToken();
 
     print(' ---- API GET ---- ');
