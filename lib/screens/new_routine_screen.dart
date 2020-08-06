@@ -30,6 +30,7 @@ class _NewRoutineState extends State<NewRoutine> {
   bool alarm = true;
   String alarmTime = convertDateTimeToHHMMString(DateTime.now());
   TextEditingController _c;
+
   void initState() {
     _c = new TextEditingController();
     super.initState();
@@ -186,7 +187,7 @@ class _NewRoutineState extends State<NewRoutine> {
               context: context,
               type: AlertType.none,
               style: alertFailedStyle,
-              title: "등록 실패 🤔",
+              title: " 🤔",
               desc: "다시 시도해주세요")
           .show();
     }

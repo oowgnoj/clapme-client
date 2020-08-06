@@ -13,7 +13,7 @@ import 'package:clapme_client/screens/new_routine_screen.dart';
 import 'package:clapme_client/screens/goal_detail_screen.dart';
 import 'package:clapme_client/screens/mypage_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:clapme_client/theme/color_theme.dart';
+import 'package:clapme_client/screens/new_onboarding_screen.dart';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:clapme_client/components/nofi_component.dart';
@@ -69,9 +69,9 @@ class _MyAppState extends State<MyApp> {
           '/goaldetail': (BuildContext context) => new GoalDetail(),
         },
         initialRoute: widget.isLogged ? '/' : '/',
-        home: Scaffold(body: NewRoutine()));
+        home: Scaffold(body: NewOnboarding()));
   }
 }
 
 // final routes = {'/': (BuildContext context) => HomeScreen};
-final routes = {'/': (BuildContext context) => NewRoutine};
+final routes = {'/': (BuildContext context) => NewOnboarding};

@@ -21,22 +21,9 @@ class _LoginState extends State<Login> {
         children: <Widget>[
           Container(
             padding: EdgeInsets.fromLTRB(20.0, 70.0, 0.0, 0.0),
-            child: Text('CLAP',
+            child: Text('MYRO',
                 style: TextStyle(fontSize: 70.0, fontWeight: FontWeight.bold)),
           ),
-          Container(
-            padding: EdgeInsets.fromLTRB(20.0, 145.0, 0.0, 0.0),
-            child: Text('ME',
-                style: TextStyle(fontSize: 70.0, fontWeight: FontWeight.bold)),
-          ),
-          Container(
-            padding: EdgeInsets.fromLTRB(150.0, 125.0, 0.0, 0.0),
-            child: Text('.',
-                style: TextStyle(
-                    fontSize: 90.0,
-                    fontWeight: FontWeight.bold,
-                    color: Clapme_green)),
-          )
         ],
       ),
     );
@@ -47,7 +34,7 @@ class _LoginState extends State<Login> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text(
-          'clapme가 처음이신가요?',
+          'first time myro?',
           style: TextStyle(fontFamily: 'Montserrat'),
         ),
         SizedBox(width: 5.0),
@@ -56,9 +43,9 @@ class _LoginState extends State<Login> {
             Navigator.of(context).pushNamed('/signup');
           },
           child: Text(
-            '회원가입',
+            'signin',
             style: TextStyle(
-                color: Clapme_green,
+                color: MYRO_violet,
                 fontFamily: 'Montserrat',
                 fontWeight: FontWeight.bold,
                 decoration: TextDecoration.underline),
@@ -76,8 +63,8 @@ class _LoginState extends State<Login> {
               fontFamily: 'Montserrat',
               fontWeight: FontWeight.bold,
               color: Colors.black),
-          focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Clapme_green))),
+          focusedBorder:
+              UnderlineInputBorder(borderSide: BorderSide(color: MYRO_violet))),
       validator: (value) => value.isEmpty ? '이메일을 입력해주세요' : null,
       onSaved: (value) => _email = value,
     );
@@ -91,8 +78,8 @@ class _LoginState extends State<Login> {
               fontFamily: 'Montserrat',
               fontWeight: FontWeight.bold,
               color: Colors.black),
-          focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Clapme_green))),
+          focusedBorder:
+              UnderlineInputBorder(borderSide: BorderSide(color: MYRO_violet))),
       validator: (value) => value.isEmpty ? '패스워드를 입력해주세요' : null,
       onSaved: (value) => _password = value,
       obscureText: true,
@@ -104,7 +91,7 @@ class _LoginState extends State<Login> {
       height: 50.0,
       child: Material(
         borderRadius: BorderRadius.circular(20.0),
-        color: Clapme_green,
+        color: MYRO_violet,
         elevation: 1.0,
         child: MaterialButton(
           onPressed: validateAndSave,
@@ -146,11 +133,12 @@ class _LoginState extends State<Login> {
     return new Scaffold(
         resizeToAvoidBottomPadding: false,
         body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             _buildTypography(),
             Container(
-                padding: EdgeInsets.only(top: 25.0, left: 25.0, right: 25.0),
+                padding: EdgeInsets.only(left: 36.0, right: 36.0),
                 child: Form(
                     key: formKey,
                     child: Column(
