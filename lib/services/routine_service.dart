@@ -99,8 +99,6 @@ class RoutineService {
   }
 }
 
-
-
 // Future<List<Routine>> fetchDayRoutine(dayOfWeek) async {
 //   SharedPreferences prefs = await SharedPreferences.getInstance();
 //   String accessToken = prefs.getString('accessToken');

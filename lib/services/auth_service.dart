@@ -17,8 +17,6 @@ Future<bool> fetchLogin(email, password) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('accessToken', decoded.accessToken);
     await prefs.setString('username', decoded.username);
-    await prefs.setString('profile', decoded.profile);
-    await prefs.setString('profilePic', decoded.profilePic);
     return true;
   } else {
     return false;

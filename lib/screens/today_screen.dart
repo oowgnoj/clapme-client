@@ -62,8 +62,8 @@ class _TodayScreenState extends State<TodayScreen> {
           padding: const EdgeInsets.fromLTRB(0, 0, 0, 50.0),
           child: GestureDetector(
             onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => NewRoutine()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => NewRoutine()));
             },
             child: Icon(Icons.add, size: 20.0, color: Colors.black87),
           ),
@@ -72,8 +72,10 @@ class _TodayScreenState extends State<TodayScreen> {
           padding: const EdgeInsets.fromLTRB(10, 0, 0, 50.0),
           child: GestureDetector(
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => RoutineListScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => RoutineListScreen()));
               },
               child: Icon(Icons.list, size: 20.0, color: Colors.black87)),
         )

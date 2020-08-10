@@ -23,6 +23,8 @@ class Auth {
   Future<bool> isLogged() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String accessToken = prefs.getString('accessToken');
+    bool CheckValue = prefs.containsKey('accessToken');
+    print(CheckValue);
 
     if (accessToken == null) {
       return false;
@@ -60,20 +62,20 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
+    print('islogged');
+    print(widget.isLogged);
     return MaterialApp(
         routes: <String, WidgetBuilder>{
           '/signup': (BuildContext context) => new Signup(),
           '/login': (BuildContext context) => new Login(),
-          '/onboarding': (BuildContext context) => new Onboarding(),
+          '/onboarding': (BuildContext context) => new NewOnboarding(),
           '/today': (BuildContext context) => new TodayScreen(),
-          // '/routinelist': (BuildContext context) => new MainScrren(),
-          // '/routinelist': (BuildContext context) => new GoalList(),
-          '/goaldetail': (BuildContext context) => new GoalDetail(),
+          '/routine': (BuildContext context) => new RoutineListScreen()
         },
-        initialRoute: widget.isLogged ? '/' : '/',
-        home: Scaffold(body: TodayScreen()));
+        initialRoute: widget.isLogged ? '/today' : '/onboarding',
+        home: Scaffold(body: NewOnboarding()));
   }
 }
 
 // final routes = {'/': (BuildContext context) => HomeScreen};
-final routes = {'/': (BuildContext context) => NewOnboarding};
+// final routes = {'/routine': (BuildContext context) => RoutineListScreen};

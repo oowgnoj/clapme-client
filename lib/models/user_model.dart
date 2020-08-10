@@ -30,23 +30,13 @@ class Token {
 class Login {
   final String accessToken;
   final String username;
-  final String email;
-  final dynamic profile;
-  final dynamic profilePic;
 
-  Login(
-      {this.accessToken,
-      this.username,
-      this.email,
-      this.profile,
-      this.profilePic});
+  Login({
+    this.accessToken,
+    this.username,
+  });
 
   factory Login.fromJson(Map<String, dynamic> json) {
-    return Login(
-        email: json['email'],
-        accessToken: json['access-token'],
-        username: json['username'],
-        profile: json['profile'],
-        profilePic: json['profile_pic']);
+    return Login(accessToken: json['accessToken'], username: json['username']);
   }
 }
