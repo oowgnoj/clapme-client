@@ -48,7 +48,6 @@ class RoutineSuccessService {
           .forEach((r) => routines.add(RoutineWithSuccess.fromJson(r)));
 
       return routines;
-
     } else {
       String message = 'Network Error, Please try again.';
 

@@ -226,57 +226,63 @@ class _NewRoutineState extends State<NewRoutine> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(25, 60, 25, 20),
-        child: new Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            titleText(this.colorCode),
-            new Row(
-              children: <Widget>[
-                routineInput(handleTitle),
-                SizedBox(width: 10, height: 30),
-                GestureDetector(
-                    onTap: () {
-                      routineIdeaSheet(context, this.randomIdea, handleTitle,
-                          handleAlarmTime);
-                    },
-                    child: ideasButton)
-              ],
-            ),
-            _daysList(days, handleDays),
-            Container(
-                child: Text(
-              'Time best works for you',
-              style: SubTitleTS,
-            )),
-            GestureDetector(
-                onTap: () {
-                  timePickerSheet(context, handleAlarmTime);
-                },
-                child: timeButton(this.alarmTime)),
-            Container(
-                child: Text(
-              'Routine color',
-              style: SubTitleTS,
-            )),
-            _colorList(handleColor),
-            descriptionField(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                cancelButton,
-                GestureDetector(
-                    onTap: () async {
-                      await addNewRoutine();
-                    },
-                    child: submitButton()),
-              ],
-            )
-          ],
+    return Scaffold(
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(25, 60, 25, 20),
+          child: new Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              titleText(this.colorCode),
+              new Row(
+                children: <Widget>[
+                  routineInput(handleTitle),
+                  SizedBox(width: 10, height: 30),
+                  GestureDetector(
+                      onTap: () {
+                        routineIdeaSheet(context, this.randomIdea, handleTitle,
+                            handleAlarmTime);
+                      },
+                      child: ideasButton)
+                ],
+              ),
+              _daysList(days, handleDays),
+              Container(
+                  child: Text(
+                'Time best works for you',
+                style: SubTitleTS,
+              )),
+              GestureDetector(
+                  onTap: () {
+                    timePickerSheet(context, handleAlarmTime);
+                  },
+                  child: timeButton(this.alarmTime)),
+              Container(
+                  child: Text(
+                'Routine color',
+                style: SubTitleTS,
+              )),
+              _colorList(handleColor),
+              descriptionField(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: cancelButton),
+                  GestureDetector(
+                      onTap: () async {
+                        await addNewRoutine();
+                      },
+                      child: submitButton()),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );

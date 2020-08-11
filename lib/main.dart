@@ -23,8 +23,6 @@ class Auth {
   Future<bool> isLogged() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String accessToken = prefs.getString('accessToken');
-    bool CheckValue = prefs.containsKey('accessToken');
-    print(CheckValue);
 
     if (accessToken == null) {
       return false;
@@ -76,6 +74,3 @@ class _MyAppState extends State<MyApp> {
         home: Scaffold(body: NewOnboarding()));
   }
 }
-
-// final routes = {'/': (BuildContext context) => HomeScreen};
-// final routes = {'/routine': (BuildContext context) => RoutineListScreen};

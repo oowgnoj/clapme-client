@@ -250,6 +250,7 @@ class _TodayScreenState extends State<TodayScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
+        color: Colors.white,
         child: Padding(
             padding: const EdgeInsets.fromLTRB(25, 40, 25, 0),
             child: Column(
