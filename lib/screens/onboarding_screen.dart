@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:clapme_client/components/daypicker_component.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 
 import 'package:clapme_client/models/routine_model.dart';
 import 'package:clapme_client/services/routine_service.dart';
 import 'package:clapme_client/utils/common_func.dart';
-import 'package:clapme_client/utils/alert_style.dart';
 import 'package:clapme_client/theme/color_theme.dart';
 
 final List<String> stepTitle = <String>[

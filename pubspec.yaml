@@ -35,6 +35,7 @@ dependencies:
   rxdart: ^0.24.0
   rflutter_alert:
     git: git://github.com/RatelHub/rflutter_alert.git
+  lottie: ^0.5.1
 
 dev_dependencies:
   flutter_test:
