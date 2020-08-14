@@ -11,7 +11,7 @@ class _NewOnboardingState extends State<NewOnboarding> {
   Color StrongBlue = Color.fromRGBO(39, 47, 89, 1);
   Color PureWhite = Color.fromRGBO(255, 255, 255, 1);
   goNextPage() {
-    if (currentPage == 3) {
+    if (currentPage == 2) {
       return Navigator.of(context).pushNamed('/login');
     }
     setState(() {
@@ -25,19 +25,23 @@ class _NewOnboardingState extends State<NewOnboarding> {
     'Go into your System'
   ];
   Widget titleText() {
-    return Container(
-        child: Text(
-      titles[currentPage],
-      style: TextStyle(
-          fontSize: 30, color: StrongBlue, fontWeight: FontWeight.bold),
-    ));
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(25, 60, 25, 0),
+      child: Container(
+          height: MediaQuery.of(context).size.height * 0.2,
+          child: Text(
+            titles[currentPage],
+            style: TextStyle(
+                fontSize: 24, color: StrongBlue, fontWeight: FontWeight.bold),
+          )),
+    );
   }
 
   List images = ['assets/onboarding-1.png', 'assets/onboarding-2.png'];
   Widget imageContainer() {
     return new Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.6,
+      width: MediaQuery.of(context).size.width * 1,
+      height: MediaQuery.of(context).size.height * 0.7,
       decoration: new BoxDecoration(
         image: new DecorationImage(image: new AssetImage(images[currentPage])),
       ),
@@ -47,23 +51,33 @@ class _NewOnboardingState extends State<NewOnboarding> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        backgroundColor: PureWhite,
-        body: Padding(
-          padding: const EdgeInsets.fromLTRB(25, 60, 25, 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              titleText(),
-              if (currentPage < 2)
-                Container(
-                  child: imageContainer(),
-                ),
-              if (currentPage == 2)
-                Lottie.asset('assets/onboarding-3.json',
-                    width: MediaQuery.of(context).size.width),
-            ],
+      backgroundColor: PureWhite,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(25, 60, 25, 20),
+            child: Text(
+              titles[currentPage],
+              style: TextStyle(
+                  fontSize: 30, color: StrongBlue, fontWeight: FontWeight.bold),
+            ),
           ),
-        ));
+          if (currentPage < 2)
+            Container(
+              child: imageContainer(),
+            ),
+          if (currentPage == 2)
+            Lottie.asset('assets/onboarding-3.json',
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.7),
+          RaisedButton(
+              onPressed: () => goNextPage(),
+              color: PureWhite,
+              child: Text('Next')),
+        ],
+      ),
+    );
   }
 }

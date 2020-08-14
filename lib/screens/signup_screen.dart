@@ -42,7 +42,7 @@ class _SignupState extends State<Signup> {
           // hintStyle: ,
           focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(
-            color: Clapme_green,
+            color: MYRO_violet,
           ))),
       validator: (value) => value.isEmpty ? '이메일을 입력해주세요' : null,
       onSaved: (value) => _email = value,
@@ -57,8 +57,8 @@ class _SignupState extends State<Signup> {
               fontFamily: 'Montserrat',
               fontWeight: FontWeight.bold,
               color: Colors.black),
-          focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Clapme_green))),
+          focusedBorder:
+              UnderlineInputBorder(borderSide: BorderSide(color: MYRO_violet))),
       obscureText: true,
       validator: (value) => value.isEmpty ? '패스워드를 입력해주세요' : null,
       onSaved: (value) => _password = value,
@@ -73,8 +73,8 @@ class _SignupState extends State<Signup> {
               fontFamily: 'Montserrat',
               fontWeight: FontWeight.bold,
               color: Colors.black),
-          focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Clapme_green))),
+          focusedBorder:
+              UnderlineInputBorder(borderSide: BorderSide(color: MYRO_violet))),
       validator: (value) => value.isEmpty ? '이름을 입력해주세요' : null,
       onSaved: (value) => _username = value,
     );
@@ -85,7 +85,7 @@ class _SignupState extends State<Signup> {
         height: 50.0,
         child: Material(
           borderRadius: BorderRadius.circular(20.0),
-          color: Clapme_green,
+          color: MYRO_violet,
           elevation: 1.0,
           child: MaterialButton(
             onPressed: validateAndSave,
@@ -149,7 +149,7 @@ class _SignupState extends State<Signup> {
                 ),
                 onPressed: () => Navigator.of(context).pushNamed('/login'),
                 width: 170,
-                color: Clapme_green)
+                color: MYRO_violet)
           ],
         ).show();
       } else {
