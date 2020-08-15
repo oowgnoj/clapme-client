@@ -41,7 +41,7 @@ class _NewOnboardingState extends State<NewOnboarding> {
   Widget imageContainer() {
     return new Container(
       width: MediaQuery.of(context).size.width * 1,
-      height: MediaQuery.of(context).size.height * 0.7,
+      height: MediaQuery.of(context).size.height * 0.6,
       decoration: new BoxDecoration(
         image: new DecorationImage(image: new AssetImage(images[currentPage])),
       ),
@@ -72,7 +72,7 @@ class _NewOnboardingState extends State<NewOnboarding> {
             Container(
               child: Lottie.asset('assets/onboarding-3.json',
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.7),
+                  height: MediaQuery.of(context).size.height * 0.6),
             ),
           RaisedButton(
               onPressed: () => goNextPage(),

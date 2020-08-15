@@ -81,7 +81,6 @@ class RoutineService {
   ApiHelper _api = ApiHelper();
 
   Future<List<Routine>> getRoutines() async {
-    print('<GET ALL ROUTINES>');
 
     final response = await this._api.get('routines');
 

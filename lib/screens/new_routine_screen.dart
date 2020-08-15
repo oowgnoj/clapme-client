@@ -95,7 +95,7 @@ class _NewRoutineState extends State<NewRoutine> {
         borderRadius: BorderRadius.circular(10),
         color: LightGrey,
       ),
-      width: 73.0,
+      width: 63.0,
       height: 54.0,
       child: Center(
         child: Text(
@@ -143,7 +143,7 @@ class _NewRoutineState extends State<NewRoutine> {
 
   Widget descriptionField() {
     return Container(
-        height: 120.0,
+        height: 110.0,
         child: TextField(
             onChanged: (text) {
               handleDescription(text);
