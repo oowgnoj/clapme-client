@@ -115,7 +115,7 @@ class _LoginState extends State<Login> {
       form.save();
       bool isLoginSuccess = await fetchLogin(_email, _password);
       if (isLoginSuccess) {
-        Navigator.of(context).pushNamed('/routine');
+        Navigator.of(context).pushNamed('/today');
       } else {
         Alert(
                 context: context,

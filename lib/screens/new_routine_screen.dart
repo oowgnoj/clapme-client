@@ -181,14 +181,14 @@ class _NewRoutineState extends State<NewRoutine> {
         description: this.description);
     var answer = await postRoutine(body);
     if (answer) {
-      // go to routine list page
+      Navigator.of(context).pushNamed('/routine');
     } else {
       Alert(
               context: context,
               type: AlertType.none,
               style: alertFailedStyle,
               title: " 🤔",
-              desc: "다시 시도해주세요")
+              desc: "please try again")
           .show();
     }
   }
