@@ -7,8 +7,8 @@ class AlarmService {
   NotificationDetails _platform;
 
   int _generateAlarmId(int id, String weekday) {
-    // 알람 id 는 unique int 로만 관리 가능, 루틴 고유 id (DB id) + 요일 숫자 (월1 ~ 일7)
-    final weekdayTable = {'mon': 1, 'tue': 2, 'wed': 3, 'thu': 4, 'fri': 5, 'sat': 6, 'sun': 7};
+    // 알람 id 는 unique int 로만 관리 가능, 루틴 고유 id (DB id) + 요일 숫자 (월10000 ~ 일70000)
+    final weekdayTable = {'mon': 10000, 'tue': 20000, 'wed': 30000, 'thu': 40000, 'fri': 50000, 'sat': 60000, 'sun': 70000};
     return id + weekdayTable[weekday];
   }
 
