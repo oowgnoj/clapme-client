@@ -10,7 +10,6 @@ import 'package:clapme_client/utils/api_helper.dart';
 var server = 'http://15.164.96.238:5000';
 
 // 루틴 등록
-
 Future<Object> postRoutine(Routine body) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String accessToken = prefs.getString('accessToken');
@@ -26,6 +25,14 @@ Future<Object> postRoutine(Routine body) async {
     body: jsonBody,
   );
   if (response.statusCode == 200) {
+    // 알람 등록
+    var result = json.decode(response.body);
+    int id = result['id'];
+    Routine routine = Routine.fromJson(result);
+
+    AlarmService alarmService = AlarmService();
+    alarmService.setWeeklyAlarms(id, routine);
+
     return true;
   } else {
     return false;

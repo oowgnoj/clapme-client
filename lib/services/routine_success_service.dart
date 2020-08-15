@@ -34,9 +34,6 @@ class RoutineSuccessService {
 
     String params = 'dateStr=$dateStr&day=$day';
 
-    print('<GET TODAY ROUTINES>');
-    print(params);
-
     final response = await this._api.get('routines', params);
 
     if (response.statusCode == 200) {
@@ -65,9 +62,6 @@ class RoutineSuccessService {
     day = day ?? this.getCurrentDay(now);
 
     var body = {'id': id, 'dateStr': dateStr, 'day': day};
-
-    print('<POST ROUTINE SUCCESS>');
-    print(body);
 
     final response = await this._api.post('routine-success', body);
 

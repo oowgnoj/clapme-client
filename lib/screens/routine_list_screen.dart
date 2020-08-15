@@ -1,4 +1,5 @@
 import 'package:clapme_client/models/routine_model.dart';
+import 'package:clapme_client/screens/today_screen.dart';
 import 'package:clapme_client/services/routine_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,7 +26,12 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
   Widget _header() {
     return GestureDetector(
       onTap: () {
-        Navigator.pop(context);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+            builder: (context) => TodayScreen()
+            )
+        );
       },
       child: Row(children: <Widget>[
         Padding(
@@ -134,7 +140,6 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
               children: <Widget>[_routineList(context, snapshot.data)],
             );
           } else if (snapshot.hasError) {
-            print(snapshot.error);
             return Icon(Icons.error_outline, size: 40.0);
           } else {
             return CircularProgressIndicator();
