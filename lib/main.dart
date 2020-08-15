@@ -60,8 +60,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    print('islogged');
-    print(widget.isLogged);
     return MaterialApp(
         routes: <String, WidgetBuilder>{
           '/signup': (BuildContext context) => new Signup(),
@@ -70,7 +68,7 @@ class _MyAppState extends State<MyApp> {
           '/today': (BuildContext context) => new TodayScreen(),
           '/routine': (BuildContext context) => new RoutineListScreen()
         },
-        initialRoute: widget.isLogged ? '/onboarding' : '/onboarding',
+        initialRoute: widget.isLogged ? '/today' : '/onboarding',
         home: Scaffold(body: NewOnboarding()));
   }
 }
