@@ -64,14 +64,16 @@ class _NewOnboardingState extends State<NewOnboarding> {
                   fontSize: 30, color: StrongBlue, fontWeight: FontWeight.bold),
             ),
           ),
-          if (currentPage < 2)
+          if (currentPage == 0 || currentPage == 1)
             Container(
               child: imageContainer(),
             ),
           if (currentPage == 2)
-            Lottie.asset('assets/onboarding-3.json',
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.7),
+            Container(
+              child: Lottie.asset('assets/onboarding-3.json',
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.7),
+            ),
           RaisedButton(
               onPressed: () => goNextPage(),
               color: PureWhite,

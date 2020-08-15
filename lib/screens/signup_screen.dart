@@ -44,7 +44,7 @@ class _SignupState extends State<Signup> {
               borderSide: BorderSide(
             color: MYRO_violet,
           ))),
-      validator: (value) => value.isEmpty ? '이메일을 입력해주세요' : null,
+      validator: (value) => value.isEmpty ? 'please enter your email' : null,
       onSaved: (value) => _email = value,
     );
   }
@@ -60,7 +60,7 @@ class _SignupState extends State<Signup> {
           focusedBorder:
               UnderlineInputBorder(borderSide: BorderSide(color: MYRO_violet))),
       obscureText: true,
-      validator: (value) => value.isEmpty ? '패스워드를 입력해주세요' : null,
+      validator: (value) => value.isEmpty ? 'please enter password' : null,
       onSaved: (value) => _password = value,
     );
   }
@@ -75,7 +75,7 @@ class _SignupState extends State<Signup> {
               color: Colors.black),
           focusedBorder:
               UnderlineInputBorder(borderSide: BorderSide(color: MYRO_violet))),
-      validator: (value) => value.isEmpty ? '이름을 입력해주세요' : null,
+      validator: (value) => value.isEmpty ? 'please enter name' : null,
       onSaved: (value) => _username = value,
     );
   }
@@ -137,11 +137,11 @@ class _SignupState extends State<Signup> {
           context: context,
           type: AlertType.none,
           style: alertSuccessStyle,
-          title: "회원가입 완료 👏",
+          title: "succefully signup",
           buttons: [
             DialogButton(
                 child: Text(
-                  "로그인 하러가기   >",
+                  "go to login   >",
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 15,
@@ -157,8 +157,8 @@ class _SignupState extends State<Signup> {
                 context: context,
                 type: AlertType.none,
                 style: alertFailedStyle,
-                title: "회원가입 실패 🤔",
-                desc: "다시 시도해주세요")
+                title: "fail to signup",
+                desc: "please try again")
             .show();
       }
     }
