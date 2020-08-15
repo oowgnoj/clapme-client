@@ -54,7 +54,7 @@ class _NewOnboardingState extends State<NewOnboarding> {
       backgroundColor: PureWhite,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.fromLTRB(25, 60, 25, 20),
