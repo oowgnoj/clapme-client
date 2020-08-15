@@ -17,10 +17,6 @@ class ApiHelper {
     uri = '${this._baseUrl}/$uri';
     String accessToken = await this._getAccessToken();
 
-    print(' ---- API POST ---- ');
-    print(uri);
-    print(accessToken);
-
     var headers = {
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': accessToken
@@ -37,10 +33,6 @@ class ApiHelper {
         : '${this._baseUrl}/$uri';
 
     String accessToken = await this._getAccessToken();
-
-    print(' ---- API GET ---- ');
-    print(uri);
-    print(accessToken);
 
     var headers = {'Authorization': accessToken};
 

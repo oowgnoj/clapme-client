@@ -239,7 +239,6 @@ class _TodayScreenState extends State<TodayScreen> {
               ],
             );
           } else if (snapshot.hasError) {
-            print(snapshot.error);
             return Icon(Icons.error_outline, size: 40.0);
           } else {
             return CircularProgressIndicator();

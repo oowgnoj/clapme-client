@@ -58,6 +58,20 @@ class Routine {
         color: json['color'],
         description: json['description']);
   }
+
+  List<String> getActiveWeekdays() {
+    List<String> activeDays = [];
+    
+    if (this.mon) activeDays.add('mon');
+    if (this.tue) activeDays.add('tue');
+    if (this.wed) activeDays.add('wed');
+    if (this.thu) activeDays.add('thu');
+    if (this.fri) activeDays.add('fri');
+    if (this.sat) activeDays.add('sat');
+    if (this.sun) activeDays.add('sun');
+
+    return activeDays;
+  }
 }
 
 class RoutineMaterial {
