@@ -1,3 +1,4 @@
+import 'package:clapme_client/models/routine_model.dart';
 import 'package:clapme_client/models/routine_with_success_model.dart';
 import 'package:clapme_client/screens/new_routine_screen.dart';
 import 'package:clapme_client/screens/onboarding_screen.dart';
@@ -31,12 +32,12 @@ class _TodayScreenState extends State<TodayScreen> {
       ));
 
 
-  Future<List<RoutineWithSuccess>> routines;
+//  Future<List<RoutineWithSuccess>> routines;
+  List<RoutineWithSuccess> routines;
 
   @override
   void initState() {
     super.initState();
-    this.routines = this.service.getTodayRoutines();
   }
 
   Widget _header(now) {
@@ -126,7 +127,6 @@ class _TodayScreenState extends State<TodayScreen> {
   }
 
   Widget _routineSuccessButton(int id, bool success) {
-
     if (success) {
       return ClipOval(
           child: Container(
@@ -141,20 +141,20 @@ class _TodayScreenState extends State<TodayScreen> {
               ))));
     } else {
       return GestureDetector(
-          onTap: () {
+          onTap: () async {
+            for (RoutineWithSuccess routine in routines) {
+              if (routine.id == id) {
+                routine.success = true;
+                break;
+              }
+            }
             setState(() {
-              this._checkColor = Colors.black87;
-              this._checkIcon =  Center(
-                  child: Icon(
-                      Icons.check,
-                      color: Colors.white,
-                      size:20.0
-                  )
-              );
+              this.routines = this.routines;
             });
             try {
+              List<RoutineWithSuccess> updatedRoutines = await this.service.postRoutineSuccess(id);
               setState(() {
-                this.routines = this.service.postRoutineSuccess(id);
+                this.routines = updatedRoutines;
               });
             } catch (e) {
               Alert(
@@ -170,8 +170,13 @@ class _TodayScreenState extends State<TodayScreen> {
               child: Container(
                   height: 25.0,
                   width: 25.0,
-                  color: this._checkColor,
-                  child: this._checkIcon
+                  color: Colors.white,
+                  child: Center(
+                      child: Icon(
+                          Icons.check,
+                          color: MainTheme().lightGrey,
+                          size:20.0
+                      ))
               )
           )
       );
@@ -228,15 +233,15 @@ class _TodayScreenState extends State<TodayScreen> {
     );
   }
 
-  Widget _routineList(BuildContext context, routines) {
+  Widget _routineList(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * 0.6,
       child: ListView.builder(
           scrollDirection: Axis.vertical,
-          itemCount: routines.length,
+          itemCount: this.routines.length,
           itemBuilder: (context, index) {
-            RoutineWithSuccess r = routines[index];
+            RoutineWithSuccess r = this.routines[index];
             return _routineCard(r.id, r.title, r.time, r.color, r.success);
           },
           padding: EdgeInsets.symmetric(vertical: 16.0)),
@@ -245,13 +250,14 @@ class _TodayScreenState extends State<TodayScreen> {
 
   Widget _body() {
     return FutureBuilder<List<RoutineWithSuccess>>(
-        future: this.routines,
+        future: this.service.getTodayRoutines(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+            this.routines = snapshot.data;
             return Column(
               children: <Widget>[
                 _statusText(snapshot.data.length),
-                _routineList(context, snapshot.data)
+                _routineList(context)
               ],
             );
           } else if (snapshot.hasError) {
