@@ -9,13 +9,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:clapme_client/utils/alert_style.dart';
 
-const StrongGrey = Color.fromRGBO(126, 131, 129, 1);
+const StrongGrey = '0xff7E8381';
 const WeakBlack = Color.fromRGBO(98, 98, 98, 1);
 const MediumGrey = Color.fromRGBO(109, 109, 109, 1);
 const LightGrey = Color.fromRGBO(242, 242, 242, 1);
-
-const SubTitleTS =
-    TextStyle(fontSize: 24, color: StrongGrey, fontWeight: FontWeight.bold);
 
 class NewRoutine extends StatefulWidget {
   @override
@@ -26,7 +23,7 @@ class _NewRoutineState extends State<NewRoutine> {
   Future<RoutineIdea> randomIdea = fetchRandomIdea();
   // 2
   String title, description;
-  String colorCode = '';
+  String colorCode = StrongGrey;
   bool alarm = true;
   String alarmTime = convertDateTimeToHHMMString(DateTime.now());
   TextEditingController _c;
@@ -53,12 +50,7 @@ class _NewRoutineState extends State<NewRoutine> {
   };
 
   Widget titleText(colorCode) {
-    Color color = StrongGrey;
-
-    if (colorCode != '') {
-      color = Color(int.parse(colorCode));
-    }
-
+    Color color = Color(int.parse(colorCode));
     return Container(
         child: Text(
       'New Routine',
@@ -113,7 +105,7 @@ class _NewRoutineState extends State<NewRoutine> {
       height: 54.0,
       child: Center(child: Text('cancel', textAlign: TextAlign.center)));
 
-  Widget submitButton() {
+  Widget submitButton(color) {
     return Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -121,7 +113,12 @@ class _NewRoutineState extends State<NewRoutine> {
         ),
         width: 100,
         height: 54.0,
-        child: Center(child: Text('submit', textAlign: TextAlign.center)));
+        child: Center(
+            child: Text('submit',
+                style: TextStyle(
+                    color: Color(int.parse(color)),
+                    fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center)));
   }
 
   Widget timeButton(String alarmTime) {
@@ -136,7 +133,13 @@ class _NewRoutineState extends State<NewRoutine> {
           padding: const EdgeInsets.all(10.0),
           child: new Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[Text('Time'), Text('> ' + alarmTime)],
+            children: <Widget>[
+              Text('Time'),
+              Text('> ' +
+                  alarmTime.substring(0, 2) +
+                  ' : ' +
+                  alarmTime.substring(2, 4))
+            ],
           ),
         ));
   }
@@ -229,62 +232,69 @@ class _NewRoutineState extends State<NewRoutine> {
 
   @override
   Widget build(BuildContext context) {
+    var SubTitleTS = TextStyle(
+        fontSize: 24,
+        color: Color(int.parse(this.colorCode)),
+        fontWeight: FontWeight.bold);
+
     return Scaffold(
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(25, 60, 25, 20),
-          child: new Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              titleText(this.colorCode),
-              new Row(
-                children: <Widget>[
-                  routineInput(handleTitle),
-                  SizedBox(width: 10, height: 30),
-                  GestureDetector(
-                      onTap: () {
-                        routineIdeaSheet(context, this.randomIdea, handleTitle,
-                            handleAlarmTime);
-                      },
-                      child: ideasButton)
-                ],
-              ),
-              _daysList(days, handleDays),
-              Container(
-                  child: Text(
-                'Time best works for you',
-                style: SubTitleTS,
-              )),
-              GestureDetector(
-                  onTap: () {
-                    timePickerSheet(context, handleAlarmTime);
-                  },
-                  child: timeButton(this.alarmTime)),
-              Container(
-                  child: Text(
-                'Routine color',
-                style: SubTitleTS,
-              )),
-              _colorList(handleColor),
-              descriptionField(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: cancelButton),
-                  GestureDetector(
-                      onTap: () async {
-                        await addNewRoutine();
-                      },
-                      child: submitButton()),
-                ],
-              )
-            ],
+      body: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(25, 60, 25, 20),
+            child: new Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                titleText(this.colorCode),
+                new Row(
+                  children: <Widget>[
+                    routineInput(handleTitle),
+                    SizedBox(width: 10, height: 30),
+                    GestureDetector(
+                        onTap: () {
+                          routineIdeaSheet(context, this.randomIdea,
+                              handleTitle, handleAlarmTime);
+                        },
+                        child: ideasButton)
+                  ],
+                ),
+                _daysList(days, handleDays),
+                Container(
+                    child: Text(
+                  'Time best works for you',
+                  style: SubTitleTS,
+                )),
+                GestureDetector(
+                    onTap: () {
+                      timePickerSheet(context, handleAlarmTime);
+                    },
+                    child: timeButton(this.alarmTime)),
+                Container(
+                    child: Text(
+                  'Routine color',
+                  style: SubTitleTS,
+                )),
+                _colorList(handleColor),
+                descriptionField(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: cancelButton),
+                    GestureDetector(
+                        onTap: () async {
+                          await addNewRoutine();
+                        },
+                        child: submitButton(this.colorCode)),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -405,7 +415,7 @@ void routineIdeaSheet(context, randomIdea, handleTitle, handleAlarmTime) {
                             '💡 ideas',
                             style: TextStyle(
                                 fontSize: 30,
-                                color: StrongGrey,
+                                color: Color(int.parse(StrongGrey)),
                                 fontWeight: FontWeight.bold),
                           ),
                           Container(
@@ -417,7 +427,7 @@ void routineIdeaSheet(context, randomIdea, handleTitle, handleAlarmTime) {
                                       snapshot.data.title,
                                       style: TextStyle(
                                           fontSize: 21,
-                                          color: StrongGrey,
+                                          color: Color(int.parse(StrongGrey)),
                                           fontWeight: FontWeight.bold),
                                     ),
                                     SizedBox(height: 20),
