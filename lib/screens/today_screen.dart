@@ -21,14 +21,21 @@ class _TodayScreenState extends State<TodayScreen> {
   MainTheme theme = MainTheme();
   DateTime now = DateTime.now();
 
+  // state to handle success check button ui
+  Color _checkColor = Colors.white;
+  Center _checkIcon = Center(
+      child: Icon(
+          Icons.check,
+          color: MainTheme().lightGrey,
+          size:20.0
+      ));
+
+
   Future<List<RoutineWithSuccess>> routines;
 
   @override
   void initState() {
     super.initState();
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-    ));
     this.routines = this.service.getTodayRoutines();
   }
 
@@ -65,7 +72,7 @@ class _TodayScreenState extends State<TodayScreen> {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => NewRoutine()));
             },
-            child: Icon(Icons.add, size: 20.0, color: Colors.black87),
+            child: Icon(Icons.add, size: 30.0, color: Colors.black87),
           ),
         ),
         Padding(
@@ -77,7 +84,7 @@ class _TodayScreenState extends State<TodayScreen> {
                     MaterialPageRoute(
                         builder: (context) => RoutineListScreen()));
               },
-              child: Icon(Icons.list, size: 20.0, color: Colors.black87)),
+              child: Icon(Icons.list, size: 30.0, color: Colors.black87)),
         )
       ],
     );
@@ -119,6 +126,7 @@ class _TodayScreenState extends State<TodayScreen> {
   }
 
   Widget _routineSuccessButton(int id, bool success) {
+
     if (success) {
       return ClipOval(
           child: Container(
@@ -134,6 +142,16 @@ class _TodayScreenState extends State<TodayScreen> {
     } else {
       return GestureDetector(
           onTap: () {
+            setState(() {
+              this._checkColor = Colors.black87;
+              this._checkIcon =  Center(
+                  child: Icon(
+                      Icons.check,
+                      color: Colors.white,
+                      size:20.0
+                  )
+              );
+            });
             try {
               setState(() {
                 this.routines = this.service.postRoutineSuccess(id);
@@ -152,13 +170,11 @@ class _TodayScreenState extends State<TodayScreen> {
               child: Container(
                   height: 25.0,
                   width: 25.0,
-                  color: Colors.white,
-                  child: Center(
-                      child: Icon(
-                    Icons.check,
-                    color: this.theme.lightGrey,
-                    size: 20.0,
-                  )))));
+                  color: this._checkColor,
+                  child: this._checkIcon
+              )
+          )
+      );
     }
   }
 
