@@ -65,7 +65,7 @@ class _NewRoutineState extends State<NewRoutine> {
         child: TextField(
             controller: _c,
             onChanged: (txt) {
-              handleTitle(txt);
+              handleTitle(txt, true);
             },
             decoration: InputDecoration(
                 border: OutlineInputBorder(
@@ -87,7 +87,7 @@ class _NewRoutineState extends State<NewRoutine> {
         borderRadius: BorderRadius.circular(10),
         color: LightGrey,
       ),
-      width: 73.0,
+      width: 63.0,
       height: 54.0,
       child: Center(
         child: Text(
@@ -146,7 +146,7 @@ class _NewRoutineState extends State<NewRoutine> {
 
   Widget descriptionField() {
     return Container(
-        height: 120.0,
+        height: 110.0,
         child: TextField(
             onChanged: (text) {
               handleDescription(text);
@@ -196,10 +196,13 @@ class _NewRoutineState extends State<NewRoutine> {
     }
   }
 
-  handleTitle(text) {
-    setState(() {
-      title = text;
-    });
+  handleTitle(text, fromHome) {
+    if (fromHome) {
+      setState(() {
+        title = text;
+      });
+      return;
+    }
     _c.text = text;
   }
 

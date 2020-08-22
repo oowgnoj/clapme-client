@@ -17,9 +17,6 @@ class _RoutineListScreenState extends State<RoutineListScreen> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-    ));
     this.routines = this.service.getRoutines();
   }
 
