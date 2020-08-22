@@ -166,33 +166,36 @@ class _SignupState extends State<Signup> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-        resizeToAvoidBottomPadding: false,
-        body: Padding(
-          padding: const EdgeInsets.fromLTRB(30.0, 40, 30, 20),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                _buildTypography(),
-                Container(
-                  padding: EdgeInsets.only(top: 35.0, left: 20.0, right: 20.0),
-                  child: Form(
-                      key: formKey,
-                      child: Column(
-                        children: <Widget>[
-                          _formEmailField(),
-                          SizedBox(height: 21.0),
-                          _formPasswordField(),
-                          SizedBox(height: 21.0),
-                          _formNameField(),
-                          SizedBox(height: 42.0),
-                          _formSubmitButton(),
-                          SizedBox(height: 21.0),
-                        ],
-                      )),
-                ),
-                _goBackButton()
-              ]),
-        ));
+    return SingleChildScrollView(
+      child: new Scaffold(
+          resizeToAvoidBottomPadding: false,
+          body: Padding(
+            padding: const EdgeInsets.fromLTRB(30.0, 40, 30, 20),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  _buildTypography(),
+                  Container(
+                    padding:
+                        EdgeInsets.only(top: 35.0, left: 20.0, right: 20.0),
+                    child: Form(
+                        key: formKey,
+                        child: Column(
+                          children: <Widget>[
+                            _formEmailField(),
+                            SizedBox(height: 21.0),
+                            _formPasswordField(),
+                            SizedBox(height: 21.0),
+                            _formNameField(),
+                            SizedBox(height: 42.0),
+                            _formSubmitButton(),
+                            SizedBox(height: 21.0),
+                          ],
+                        )),
+                  ),
+                  _goBackButton()
+                ]),
+          )),
+    );
   }
 }

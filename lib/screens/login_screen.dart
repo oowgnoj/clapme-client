@@ -132,28 +132,30 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return new Scaffold(
         resizeToAvoidBottomPadding: false,
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            _buildTypography(),
-            Container(
-                padding: EdgeInsets.only(left: 36.0, right: 36.0),
-                child: Form(
-                    key: formKey,
-                    child: Column(
-                      children: <Widget>[
-                        _formEmailField(),
-                        SizedBox(height: 20.0),
-                        _formPasswordField(),
-                        SizedBox(height: 40.0),
-                        _formSubmitButton(),
-                        SizedBox(height: 10.0),
-                      ],
-                    ))),
-            SizedBox(height: 15.0),
-            _buildSigninGuide()
-          ],
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              _buildTypography(),
+              Container(
+                  padding: EdgeInsets.only(left: 36.0, right: 36.0),
+                  child: Form(
+                      key: formKey,
+                      child: Column(
+                        children: <Widget>[
+                          _formEmailField(),
+                          SizedBox(height: 20.0),
+                          _formPasswordField(),
+                          SizedBox(height: 40.0),
+                          _formSubmitButton(),
+                          SizedBox(height: 10.0),
+                        ],
+                      ))),
+              SizedBox(height: 15.0),
+              _buildSigninGuide()
+            ],
+          ),
         ));
   }
 }
