@@ -22,17 +22,6 @@ class _TodayScreenState extends State<TodayScreen> {
   MainTheme theme = MainTheme();
   DateTime now = DateTime.now();
 
-  // state to handle success check button ui
-  Color _checkColor = Colors.white;
-  Center _checkIcon = Center(
-      child: Icon(
-          Icons.check,
-          color: MainTheme().lightGrey,
-          size:20.0
-      ));
-
-
-//  Future<List<RoutineWithSuccess>> routines;
   List<RoutineWithSuccess> routines;
 
   @override
